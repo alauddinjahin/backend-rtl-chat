@@ -1,11 +1,8 @@
+require('dotenv').config()
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const cors = require('cors');
-const dotenv = require('dotenv');
-
-// Load environment variables
-dotenv.config()
 
 // Import configurations and routes
 const connectDB = require('./config/database');
