@@ -74,7 +74,10 @@ class UserService {
         }
 
         // Verify password
+        console.log(user)
+        console.log('---------------------------------------------------')
         const isPasswordValid = await this.verifyPassword(loginDto.password, user.password);
+        console.log(loginDto.password, isPasswordValid)
         if (!isPasswordValid) {
             throw new Error('Invalid credentials');
         }
@@ -168,5 +171,3 @@ class UserService {
 
 module.exports = UserService
 
-
-// { "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODcyZDkxZjQ0M2VjNjk4YTliZGFmZWIiLCJpYXQiOjE3NTIzNTcxNTEsImV4cCI6MTc1Mjk2MTk1MX0.HSUMtbmyJkbHMijGNCjvufib7_D2zZi5_FMC0RD_0r8"}
