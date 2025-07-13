@@ -110,6 +110,7 @@ class UserService {
 
         // Get user
         const user = await UserRepository.findById(userId);
+        console.log(user, 'inside service')
         if (!user) {
             throw new Error('User not found');
         }

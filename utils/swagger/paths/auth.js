@@ -219,7 +219,125 @@
  *                 value:
  *                   error: "Invalid current password"
  *                   code: "INVALID_PASSWORD"
+ * 
+ * /api/v1/users:
+ *   get:
+ *     summary: Get all users except the authenticated user
+ *     tags: [Users]
+ *     description: |
+ *       Retrieve a list of all users excluding the currently authenticated user.
+ *
+ *       **Example cURL:**
+ *       ```bash
+ *       curl -X GET http://localhost:5000/api/v1/users \
+ *         -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+ *       ```
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of users (excluding the authenticated user)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/UserResponse'
+ *       401:
+ *         description: Unauthorized - JWT is missing or invalid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               error: "Access denied"
+ *               code: "UNAUTHORIZED"
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               error: "Internal server error"
+ *               code: "SERVER_ERROR"
  */
+
+/**
+ * @swagger
+ * /api/v1/users/{id}:
+ *   get:
+ *     summary: Get a user by ID
+ *     tags: [Users]
+ *     description: |
+ *       Retrieve a user's public profile by their ID. This endpoint excludes the authenticated user’s sensitive data.
+ *
+ *       **Example cURL:**
+ *       ```bash
+ *       curl -X GET http://localhost:5000/api/v1/users/64a7b8c9d1e2f3a4b5c6d7e8 \
+ *         -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+ *       ```
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The ID of the user to retrieve
+ *         schema:
+ *           type: string
+ *           example: 64a7b8c9d1e2f3a4b5c6d7e8
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   $ref: '#/components/schemas/UserResponse'
+ *       400:
+ *         description: Invalid user ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               error: "Invalid user ID"
+ *               code: "INVALID_ID"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               error: "Access denied"
+ *               code: "UNAUTHORIZED"
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               error: "User not found"
+ *               code: "USER_NOT_FOUND"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               error: "Internal server error"
+ *               code: "SERVER_ERROR"
+ */
+
 
 module.exports = {};
 ```

@@ -55,7 +55,7 @@ class AuthController {
     static async changePassword(req, res) {
         try {
             const changePasswordDto = new ChangePasswordDto(req.body);
-            const result = await UserService.changePassword(req.user._id, changePasswordDto);
+            const result = await UserService.changePassword(req.user.id, changePasswordDto);
             
             res.json(result);
             
@@ -69,7 +69,7 @@ class AuthController {
 
     static async getAllUsers(req, res) {
         try {
-            const users = await UserService.getAllUsers(req.user._id);
+            const users = await UserService.getAllUsers(req.user.id);
             res.json({ users });
         } catch (error) {
             console.error('Get users error:', error);
@@ -79,24 +79,24 @@ class AuthController {
         }
     }
 
-    static async getAllUsers(req, res) {
-        try {
-            const currentUserId = req.user._id; // From auth middleware
-            const users = await UserService.getAllUsers(currentUserId);
+    // static async getAllUsers(req, res) {
+    //     try {
+    //         const currentUserId = req.user.id; // From auth middleware
+    //         const users = await UserService.getAllUsers(currentUserId);
             
-            res.status(HttpStatusCode.OK).json({
-                message: 'Users retrieved successfully',
-                users: users,
-                count: users.length
-            });
-        } catch (error) {
-            console.error('Get all users error:', error);
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
-                message: 'Server error',
-                error: error.message
-            });
-        }
-    }
+    //         res.status(HTTPStatusCode.OK).json({
+    //             message: 'Users retrieved successfully',
+    //             users: users,
+    //             count: users.length
+    //         });
+    //     } catch (error) {
+    //         console.error('Get all users error:', error);
+    //         res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+    //             message: 'Server error',
+    //             error: error.message
+    //         });
+    //     }
+    // }
     
 
     static async getUserById(req, res) {

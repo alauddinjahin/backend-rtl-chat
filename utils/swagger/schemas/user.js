@@ -59,7 +59,7 @@
  *     UserResponse:
  *       type: object
  *       properties:
- *         _id:
+ *         id:
  *           type: string
  *           example: "64a7b8c9d1e2f3a4b5c6d7e8"
  *         username:
