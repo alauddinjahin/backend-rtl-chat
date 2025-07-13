@@ -74,10 +74,7 @@ class UserService {
         }
 
         // Verify password
-        console.log(user)
-        console.log('---------------------------------------------------')
         const isPasswordValid = await this.verifyPassword(loginDto.password, user.password);
-        console.log(loginDto.password, isPasswordValid)
         if (!isPasswordValid) {
             throw new Error('Invalid credentials');
         }
