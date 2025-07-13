@@ -183,7 +183,7 @@ app.get(`/api/${API_VERSION}/health`, async (req, res) => {
       dependencies: {
         database: 'connected', // Add actual DB health check
         redis: 'connected',    // Add Redis health check if used
-        socketConnections: manager.getConnectionCount()
+        socketConnections: manager.getConnectedUsersCount()
       }
     };
     
