@@ -241,6 +241,9 @@ class SocketManager {
         return this.connectedUsers.size;
     }
 
+    socketConnectionsUsers() {
+        return this.userSockets.size;
+    }
    
     getConnectedUsers() {
         return Array.from(this.connectedUsers.keys());
