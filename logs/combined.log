@@ -1,0 +1,8 @@
+{"environment":"development","level":"info","message":"Server started successfully","nodeVersion":"v20.18.0","pid":10772,"port":"5000","service":"messaging-api","timestamp":"2025-07-13T11:51:19.272Z"}
+{"environment":"development","level":"info","message":"Server started successfully","nodeVersion":"v20.18.0","pid":11044,"port":"5000","service":"messaging-api","timestamp":"2025-07-13T11:51:29.481Z"}
+{"environment":"development","level":"info","message":"Server started successfully","nodeVersion":"v20.18.0","pid":9076,"port":"5000","service":"messaging-api","timestamp":"2025-07-13T11:54:32.255Z"}
+{"environment":"development","level":"info","message":"Server started successfully","nodeVersion":"v20.18.0","pid":11096,"port":"5000","service":"messaging-api","timestamp":"2025-07-13T11:55:02.888Z"}
+{"environment":"development","level":"info","message":"Server started successfully","nodeVersion":"v20.18.0","pid":12708,"port":"5000","service":"rtl-chat-api","timestamp":"2025-07-13T11:56:07.418Z"}
+{"environment":"development","level":"info","message":"Server started successfully","nodeVersion":"v20.18.0","pid":11456,"port":"5000","service":"rtl-chat-api","timestamp":"2025-07-13T11:56:28.826Z"}
+{"environment":"development","level":"info","message":"Server started successfully","nodeVersion":"v20.18.0","pid":11484,"port":"5000","service":"rtl-chat-api","timestamp":"2025-07-13T11:56:41.592Z"}
+{"environment":"development","level":"info","message":"Server started successfully","nodeVersion":"v20.18.0","pid":4952,"port":"5000","service":"rtl-chat-api","timestamp":"2025-07-13T11:57:46.962Z"}
