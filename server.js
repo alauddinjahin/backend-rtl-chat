@@ -51,7 +51,7 @@ app.use(helmet(helmetConfig));
 
 // Middleware stack
 app.use(compression());
-// app.use(generalLimiterRedis);
+app.use(generalLimiterRedis);
 
 
 // Enhanced CORS configuration
