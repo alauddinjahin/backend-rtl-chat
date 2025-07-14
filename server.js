@@ -94,8 +94,8 @@ app.get(BASE_PATH, (req, res) => {
 });
 
 // app.use(`/api/${API_VERSION}`, authRoutes);
-app.use(`${BASE_PATH}`, authRoutes);
-// app.use(`${BASE_PATH}`, authLimiterRedis, authRoutes);
+// app.use(`${BASE_PATH}`, authRoutes);
+app.use(`${BASE_PATH}`, authLimiterRedis, authRoutes);
 app.use(`${BASE_PATH}/users`, userRoutes);
 app.use(`${BASE_PATH}/messages`, messageRoutes);
 
