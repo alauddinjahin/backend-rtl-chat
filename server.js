@@ -4,7 +4,7 @@ const http = require('http');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
-const rateLimit = require('express-rate-limit');
+// const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 
 // const configureSocket = require('./config/socket');
@@ -18,15 +18,16 @@ const { initializeErrorHandlers } = require('./middleware/errorMiddleware');
 const logger = require('./utils/logger');
 const helmetConfig = require("./config/helmet");
 const corsConfig = require("./config/cors");
-const {generalLimiter, authLimiter:authLimiterConfig } = require('./config/limiter');
+// const {generalLimiter, authLimiter:authLimiterConfig } = require('./config/limiter');
 const { requestIdGenerator } = require('./middleware/request');
 const healthCheck = require('./utils/healthCheck');
 const Metrics = require('./utils/metrics');
 const applicationLogger = require('./utils/applicationLogger');
 const HTTPStatusCode = require('./utils/statusCode');
 const startServer = require('./utils/serverSetup');
-
-// need to add swagger
+const { BASE_PATH, API_DOCS_ROUTE } = require('./config/api');
+const runRedis = require('./tests/redis');
+const { authLimiterRedis, generalLimiterRedis } = require('./middleware/rateLimiterRedis');
 
 
 // Create Express app
@@ -43,13 +44,13 @@ app.use(helmet(helmetConfig));
 
 // Rate limiting
 // console.log(authLimiterConfig, 'authLimiterConfig')
-const limiter = rateLimit(generalLimiter);
-const authLimiter = rateLimit(authLimiterConfig);
+// const limiter = rateLimit(generalLimiter);
+// const authLimiter = rateLimit(authLimiterConfig);
 
 
 // Middleware stack
 app.use(compression());
-app.use(limiter);
+app.use(generalLimiterRedis);
 
 
 // Enhanced CORS configuration
@@ -80,21 +81,21 @@ app.use(requestIdGenerator);
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // API versioning
-const API_VERSION = process.env.API_VERSION || "v1";
+// const API_VERSION = process.env.API_VERSION || "v1";
 
 // Routes
-app.use(`/api/${API_VERSION}`, authRoutes);
-// app.use(`/api/${API_VERSION}`, authLimiter, authRoutes);
-app.use(`/api/${API_VERSION}/users`, userRoutes);
-app.use(`/api/${API_VERSION}/messages`, messageRoutes);
+// app.use(`/api/${API_VERSION}`, authRoutes);
+app.use(`${BASE_PATH}`, authLimiterRedis, authRoutes);
+app.use(`${BASE_PATH}/users`, userRoutes);
+app.use(`${BASE_PATH}/messages`, messageRoutes);
 
 
 
-app.use(`/api/${API_VERSION}/docs`, swaggerRoutes)
+app.use(`${BASE_PATH}${API_DOCS_ROUTE}`, swaggerRoutes)
 
 
 // Enhanced health check endpoint
-app.get(`/api/${API_VERSION}/health`, async (req, res) => {
+app.get(`${BASE_PATH}/health`, async (req, res) => {
   try {
     return res.json(healthCheck(req, manager));
   } catch (error) {
@@ -109,7 +110,7 @@ app.get(`/api/${API_VERSION}/health`, async (req, res) => {
 });
 
 // Metrics endpoint for monitoring
-app.get(`/api/${API_VERSION}/metrics`, (req, res) => {
+app.get(`${BASE_PATH}/metrics`, (req, res) => {
 
   if (process.env.NODE_ENV === 'production') {
     // In production, protect this endpoint
@@ -177,6 +178,7 @@ startServer(server, ({ PORT, NODE_ENV, NODE_VERSION, PID })=>{
   
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${NODE_ENV || 'development'}`);
-  console.log(`API URL: http://localhost:${PORT}/${API_VERSION}`);
-  console.log(`Health check: http://localhost:${PORT}/${API_VERSION}/health`);
+  console.log(`API URL: http://localhost:${PORT}${BASE_PATH}`);
+  console.log(`Health check: http://localhost:${PORT}${BASE_PATH}/health`);
+  runRedis()
 })

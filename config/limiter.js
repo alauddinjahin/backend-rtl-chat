@@ -20,7 +20,7 @@ const configLimiter = {
     },
     get authLimiter(){
         return {
-            max: 5,
+            max: 50,
         ...this._getMessage(),
         windowMs: this._windowMs()
         }
