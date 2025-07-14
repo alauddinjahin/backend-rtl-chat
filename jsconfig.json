@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "checkJs": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+    },
+    "types": ["node", "jest"]
+  },
+  "exclude": ["node_modules"]
+}
+
+// disabled nodemodules to check typescript

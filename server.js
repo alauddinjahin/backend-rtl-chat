@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const http = require('http');
+const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
@@ -50,7 +51,7 @@ app.use(helmet(helmetConfig));
 
 // Middleware stack
 app.use(compression());
-app.use(generalLimiterRedis);
+// app.use(generalLimiterRedis);
 
 
 // Enhanced CORS configuration
@@ -83,9 +84,18 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // API versioning
 // const API_VERSION = process.env.API_VERSION || "v1";
 
-// Routes
+// // Routes
+app.get(/^\/($|api(\/?)$)/, (req, res) => {
+  res.redirect(301, BASE_PATH)
+});
+
+app.get(BASE_PATH, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/welcome.html'));
+});
+
 // app.use(`/api/${API_VERSION}`, authRoutes);
-app.use(`${BASE_PATH}`, authLimiterRedis, authRoutes);
+app.use(`${BASE_PATH}`, authRoutes);
+// app.use(`${BASE_PATH}`, authLimiterRedis, authRoutes);
 app.use(`${BASE_PATH}/users`, userRoutes);
 app.use(`${BASE_PATH}/messages`, messageRoutes);
 
@@ -182,3 +192,7 @@ startServer(server, ({ PORT, NODE_ENV, NODE_VERSION, PID })=>{
   console.log(`Health check: http://localhost:${PORT}${BASE_PATH}/health`);
   runRedis()
 })
+
+
+
+module.exports = app;

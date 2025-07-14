@@ -7,7 +7,7 @@ class MessageController {
         try {
 
             const { receiverId, content, type = 'text' } = req.body;
-            const senderId = req.user._id;
+            const senderId = req.user.id;
 
             if (!receiverId || !content) {
                 return res.status(HTTPStatusCode.BAD_REQUEST).json({ 
@@ -34,7 +34,7 @@ class MessageController {
    
     static async getUnreadMessages(req, res) {
         try {
-            const userId = req.user._id;
+            const userId = req.user.id;
             const unreadMessages = await MessageService.getUnreadMessages(userId);
 
             res.json({
@@ -85,7 +85,7 @@ class MessageController {
     static async deleteMessage(req, res) {
         try {
             const { messageId } = req.params;
-            const userId = req.user._id;
+            const userId = req.user.id;
 
             if (!messageId.match(/^[0-9a-fA-F]{24}$/)) {
                 return res.status(HTTPStatusCode.BAD_REQUEST).json({ 
@@ -120,7 +120,7 @@ class MessageController {
     static async deleteConversation(req, res) {
         try {
             const { userId } = req.params;
-            const currentUserId = req.user._id;
+            const currentUserId = req.user.id;
 
             if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
                 return res.status(HTTPStatusCode.BAD_REQUEST).json({ 

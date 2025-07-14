@@ -16,6 +16,8 @@ class SocketManager {
         this.messageHandlerFactory = new MessageHandlerFactory(this.connectedUsers);
         this.typingManager = new TypingIndicatorManager();
         this.roomManager = new RoomManager();
+
+        this.cleanupInterval = null;
     }
 
 
@@ -39,7 +41,6 @@ class SocketManager {
 
     load(){
         console.log("Socket loading ...");
-        
         this._authenticate();
         this._setupEventHandlers();
         this._setupHealthCheck();
@@ -79,10 +80,18 @@ class SocketManager {
 
 
     _setupHealthCheck() {
+
         // Clean up stale connections every 5 minutes
-        setInterval(() => {
-            this._cleanupStaleConnections();
-        }, 5 * 60 * 1000);
+        // this.cleanupInterval = setInterval(() => {
+        //     this._cleanupStaleConnections();
+        // }, 5 * 60 * 1000);
+    }
+
+    stopHealthCheck() {
+        if (this.cleanupInterval) {
+            clearInterval(this.cleanupInterval);
+            this.cleanupInterval = null;
+        }
     }
 
 

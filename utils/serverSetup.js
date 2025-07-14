@@ -5,8 +5,19 @@ const startServer = async (server, cb = ()=>{}) => {
   try {
 
     await connectDB();
+
+    const listener = server.listen(serverConfig.PORT, _ => cb(serverConfig));
+
+       // Handle port in use error
+    listener.on("error", (e) => {
+      if (e.code === 'EADDRINUSE') {
+        setTimeout(() => {
+          server.close();
+          server.listen(serverConfig.PORT);
+        }, 1000);
+      }
+    });
     
-    server.listen(serverConfig.PORT, _ => cb(serverConfig));
 
     
   } catch (error) {
