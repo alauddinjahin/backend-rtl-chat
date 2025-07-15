@@ -6,7 +6,8 @@ module.exports = {
     '/node_modules/',
     '/playwright-report/',
     '/test-results/',
-    '/tests/e2e/'
+    '/tests/e2e/',
+    'tests/redis.js'
   ],
   collectCoverageFrom: [
     'backend/**/*.js',
@@ -16,6 +17,7 @@ module.exports = {
     'routes/**/*.js',
     'services/**/*.js',
     'utils/**/*.js',
+    '!**/utils/swagger/**',
     '!**/node_modules/**',
     '!**/coverage/**',
     '!**/test-results/**',
@@ -24,6 +26,7 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html', 'json'],
   setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  globalTeardown: '<rootDir>/tests/teardown.js',
   globals: {
     expect: 'readonly'
   },
@@ -38,9 +41,15 @@ module.exports = {
   verbose: true,
   testTimeout: 30000,
   maxWorkers: '50%',
+  // maxWorkers: 1,
   clearMocks: true,
   restoreMocks: true,
+  resetMocks: true,
   detectOpenHandles: true,
+  detectLeaks: true,
+  forceExit: true,
+  cache: false,
+  watchman: false,
   moduleDirectories: ['node_modules', '<rootDir>'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',

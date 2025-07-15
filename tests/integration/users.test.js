@@ -2,6 +2,7 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const app = require('@/server');
 const { BASE_PATH } = require('@/config/api');
+// const { runRedis, quitRedis } = require('./../redis');
 
 // Test data
 const testUser = {
@@ -19,8 +20,21 @@ describe('User API Integration Tests', () => {
     // Start server on random port
     server = app.listen(0);
 
+    // Check initial DB state
+    console.log('Initial DB state:', mongoose.connection.readyState);
+
+    // Wait for DB connection if needed
+    if (mongoose.connection.readyState !== 1) {
+      console.log('Waiting for DB connection...');
+      await mongoose.connection.asPromise();
+    }
+
+    console.log('Final DB state:', mongoose.connection.readyState);
+
     // Clear database and create test user
     await mongoose.connection.dropDatabase();
+
+    // runRedis();
 
     // Register test user
     const registerResponse = await request(app)
@@ -49,9 +63,14 @@ describe('User API Integration Tests', () => {
   }, 30000);
 
   afterAll(async () => {
-    await mongoose.connection.dropDatabase();
-    await server.close();
-    await mongoose.disconnect();
+    if (server) {
+      await server.close();
+    }
+
+    if (mongoose.connection.readyState === 1) {
+      await mongoose.connection.dropDatabase();
+      await mongoose.disconnect();
+    }
   }, 30000);
 
   describe('Authentication', () => {

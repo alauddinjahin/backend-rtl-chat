@@ -32,7 +32,7 @@ const Metrics = require('./utils/metrics');
 const HTTPStatusCode = require('./utils/statusCode');
 const startServer = require('./utils/serverSetup');
 const { BASE_PATH, API_DOCS_ROUTE } = require('./config/api');
-const runRedis = require('./tests/redis');
+const { runRedis } = require('./tests/redis');
 const {
   authLimiterRedis,
   generalLimiterRedis
@@ -177,10 +177,10 @@ startServer(server, ({ PORT, NODE_ENV, NODE_VERSION, PID }) => {
     pid: PID
   });
 
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Environment: ${NODE_ENV || 'development'}`);
-  console.log(`API URL: http://localhost:${PORT}${BASE_PATH}`);
-  console.log(`Health check: http://localhost:${PORT}${BASE_PATH}/health`);
+  // console.log(`Server running on port ${PORT}`);
+  // console.log(`Environment: ${NODE_ENV || 'development'}`);
+  // console.log(`API URL: http://localhost:${PORT}${BASE_PATH}`);
+  // console.log(`Health check: http://localhost:${PORT}${BASE_PATH}/health`);
   runRedis();
 });
 

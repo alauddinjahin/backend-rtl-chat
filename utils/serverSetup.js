@@ -1,9 +1,8 @@
-const connectDB = require('../config/database');
+const DB = require('../config/database');
 const serverConfig = require('./../config/server');
-
 const startServer = async (server, cb = () => {}) => {
   try {
-    await connectDB();
+    await DB.connect();
 
     const listener = server.listen(serverConfig.PORT, _ => cb(serverConfig));
 
@@ -13,7 +12,7 @@ const startServer = async (server, cb = () => {}) => {
         /* eslint-env node */
         setTimeout(() => {
           server.close();
-          server.listen(serverConfig.PORT);
+          // server.listen(serverConfig.PORT);
         }, 1000);
       }
     });
