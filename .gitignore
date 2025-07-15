@@ -23,7 +23,7 @@ node_modules/
 
 # !/usr/bin/env sh
 # . "$(dirname "$0")/husky.sh"
-# npm run lint && npm run test 
+# npm run precommit:husky # && npm run test 
 
 # .husky/
 # ├── pre-commit         # Runs lint and tests

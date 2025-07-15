@@ -18,6 +18,7 @@
     "format:check": "prettier --check . tests",
     "ci": "npm run lint && npm run format:check && npm run test && npm run test:e2e:headed",
     "prepare": "husky install",
+    "precommit:husky": "npm run lint && npm run format && npm run format:check",
     "postinstall": "playwright install",
     "clean": "rm -rf node_modules dist coverage",
     "coverage:clean": "rm -rf coverage/*",
