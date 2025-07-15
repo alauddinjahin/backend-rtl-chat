@@ -1,4 +1,4 @@
-// tests/unit/UserService.test.js
+/* eslint-env node, jest */
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -6,6 +6,7 @@ const UserService = require('../../services/UserService');
 const UserRepository = require('../../repositories/UserRepository');
 const { validateInput, validatePassword, emailValidator } = require('../../utils/validator');
 const UserDto = require('../../dto/UserDto');
+
 
 // Mock all dependencies
 jest.mock('../../repositories/UserRepository');
@@ -15,18 +16,16 @@ jest.mock('../../utils/validator');
 jest.mock('../../dto/UserDto');
 
 describe('UserService', () => {
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
 
   describe('register', () => {
-
     it('should register a new user successfully', async () => {
       // Arrange
       const registerDto = { username: 'testuser', email: 'test@example.com', password: 'Password123!' };
-      
+
       validateInput.mockReturnValue([]); // no validation errors
       emailValidator.mockReturnValue(null); // email valid
 
@@ -48,12 +47,12 @@ describe('UserService', () => {
       expect(UserRepository.create).toHaveBeenCalledWith({
         username: registerDto.username,
         email: registerDto.email,
-        password: 'hashedPassword',
+        password: 'hashedPassword'
       });
       expect(jwt.sign).toHaveBeenCalledWith({ userId: '64a7b8c9d1e2f3a4b5c6d7e8' }, process.env.JWT_SECRET, { expiresIn: '7d' });
       expect(result).toEqual({
         user: { _id: '64a7b8c9d1e2f3a4b5c6d7e8', username: 'testuser', email: 'test@example.com', password: 'hashedPassword' },
-        token: 'jwtToken',
+        token: 'jwtToken'
       });
     });
 
@@ -102,7 +101,7 @@ describe('UserService', () => {
       expect(jwt.sign).toHaveBeenCalledWith({ userId: 'user123' }, process.env.JWT_SECRET, { expiresIn: '7d' });
       expect(result).toEqual({
         user: { _id: 'user123', password: 'hashedPassword' },
-        token: 'jwtToken',
+        token: 'jwtToken'
       });
     });
 
@@ -153,9 +152,9 @@ describe('UserService', () => {
       UserRepository.findById.mockResolvedValue({
         _id: userId,
         password: 'hashedOldPass',
-        save: jest.fn().mockResolvedValue(true),
+        save: jest.fn().mockResolvedValue(true)
       });
-      bcrypt.compare.mockImplementation((password, hashed) => {
+      bcrypt.compare.mockImplementation((password, _hashed) => {
         if (password === 'oldPass') return Promise.resolve(true);
         return Promise.resolve(false);
       });
@@ -203,7 +202,7 @@ describe('UserService', () => {
       const currentUserId = 'user123';
       const users = [
         { _id: 'user1', username: 'user1' },
-        { _id: 'user2', username: 'user2' },
+        { _id: 'user2', username: 'user2' }
       ];
       UserRepository.getAllExceptUser.mockResolvedValue(users);
       UserDto.mockImplementation(user => user);

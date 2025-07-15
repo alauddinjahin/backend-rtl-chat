@@ -1,26 +1,24 @@
 const HTTPStatusCode = require('./../utils/statusCode'); // Adjust path as needed
-
+const logger = require('./../utils/logger');
 
 class AppError extends Error {
   constructor(message, statusCode = HTTPStatusCode.INTERNAL_SERVER_ERROR, isOperational = true) {
     super(message);
-    
+
     this.name = this.constructor.name;
     this.statusCode = statusCode;
     this.isOperational = isOperational;
     this.timestamp = new Date().toISOString();
-    
+
     Error.captureStackTrace(this, this.constructor);
   }
 }
 
 
-
 // Enhanced global error handling middleware
-const errorHandler = (err, req, res, next) => {
-
+const errorHandler = (err, req, res, _next) => {
   let error = { ...err };
-  error.message = err?.message || "Something wents wrong";
+  error.message = err?.message || 'Something wents wrong';
   error.statusCode = err?.statusCode || HTTPStatusCode.INTERNAL_SERVER_ERROR;
 
   // Log error details with request context
@@ -57,7 +55,6 @@ const errorHandler = (err, req, res, next) => {
 
   // Handle specific error types
   const handleSpecificErrors = (err) => {
-
     // Mongoose CastError (Invalid ObjectId)
     if (err.name === 'CastError') {
       const message = `Invalid ${err.path}: ${err.value}`;
@@ -117,7 +114,6 @@ const errorHandler = (err, req, res, next) => {
     }
 
     return err;
-
   };
 
   // Process the error
@@ -127,7 +123,7 @@ const errorHandler = (err, req, res, next) => {
   logError(error, req);
 
 
-   const getCleanMessage = (error) => {
+  const getCleanMessage = (error) => {
     // For operational errors (our custom AppError), use the message
     if (error.isOperational) {
       return error.message;
@@ -142,7 +138,7 @@ const errorHandler = (err, req, res, next) => {
     return error.message;
   };
 
-  
+
   // Prepare clean response
   const errorResponse = {
     success: false,
@@ -158,10 +154,10 @@ const errorHandler = (err, req, res, next) => {
     errorResponse.requestId = req.id;
   }
 
-if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development') {
     errorResponse.debug = {
       originalMessage: err.message,
-      stack: error.stack,
+      // stack: error.stack,
       name: error.name,
       path: req.originalUrl,
       method: req.method
@@ -169,20 +165,31 @@ if (process.env.NODE_ENV === 'development') {
   }
 
   // Send error response
-  console.log(errorResponse)
+  // console.log(errorResponse)
   return res.status(error.statusCode).json(errorResponse);
-  
 };
 
 
-const notFoundHandler = (req, res, next) => {
-  const message = `Route ${req.originalUrl} not found`;
-  const error = new AppError(message, HTTPStatusCode.NOT_FOUND);
-  next(error);
+const notFoundHandler = (req, res) => {
+  // Log the 404 warning
+  logger.warn(`404 - Route not found: ${req.method} ${req.originalUrl}`, {
+    ip: req.ip,
+    userAgent: req.get('User-Agent'),
+    requestId: req.id
+  });
+
+  // Return 404 response directly
+  return res.status(HTTPStatusCode.NOT_FOUND).json({
+    error: 'Route not found',
+    message: `The requested endpoint ${req.method} ${req.originalUrl} does not exist`,
+    requestId: req.id,
+    timestamp: new Date().toISOString()
+  });
 };
+
 
 const asyncHandler = (fn) => (req, res, next) => {
-  Promise.resolve(fn(req, res, next)).catch(next);
+  return Promise.resolve(fn(req, res, next)).catch(next);
 };
 
 
@@ -201,7 +208,7 @@ const handleUnhandledRejection = (server) => {
     console.error('UNHANDLED REJECTION! Shutting down...');
     console.error('Error:', err.name, err.message);
     console.error('Stack:', err.stack);
-    
+
     server.close(() => {
       process.exit(1);
     });
@@ -212,7 +219,7 @@ const handleUnhandledRejection = (server) => {
 const handleGracefulShutdown = (server) => {
   const shutdown = (signal) => {
     console.log(`\n${signal} received. Shutting down gracefully...`);
-    
+
     server.close(() => {
       console.log('Process terminated');
       process.exit(0);
@@ -237,6 +244,5 @@ module.exports = {
   asyncHandler,
   initializeErrorHandlers
 };
-
 
 

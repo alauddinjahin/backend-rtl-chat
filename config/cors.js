@@ -1,10 +1,10 @@
-const allowedOrigins = require("../utils/allowedOrigins");
+const allowedOrigins = require('../utils/allowedOrigins');
 
 module.exports = {
   origin: (origin, callback) => {
     // Allow requests with no origin (mobile apps, etc.)
     if (!origin) return callback(null, true);
-    
+
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -16,4 +16,4 @@ module.exports = {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   exposedHeaders: ['X-Total-Count', 'X-Page-Count']
-}
+};

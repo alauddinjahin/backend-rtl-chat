@@ -4,7 +4,7 @@ const requestIdGenerator = (req, res, next) => {
   req.id = require('crypto').randomUUID();
   res.setHeader('X-Request-ID', req.id);
   next();
-}
+};
 
 
 // Request validation middleware
@@ -22,6 +22,6 @@ const validateRequest = (req, res, next) => {
 
 
 module.exports = {
-    requestIdGenerator,
-    validateRequest
-}
+  requestIdGenerator,
+  validateRequest
+};

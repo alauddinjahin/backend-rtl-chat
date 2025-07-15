@@ -1,0 +1,9 @@
+node_modules
+coverage
+logs
+public
+test-results
+playwright-report
+.github
+.husky
+.vscode

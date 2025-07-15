@@ -27,3 +27,9 @@ describe('App Integration Tests', () => {
 
   // Add more integration tests for your specific routes
 });
+
+
+// "lint": "eslint src tests",
+// "lint:fix": "eslint src tests --fix",
+// "format": "prettier --write src tests",
+// "format:check": "prettier --check src tests",

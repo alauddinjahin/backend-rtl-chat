@@ -1,4 +1,5 @@
-const { test, expect, request } = require('@playwright/test');
+/* eslint-disable no-redeclare */
+const { test, expect } = require('@playwright/test');
 const { faker } = require('@faker-js/faker');
 const { BASE_PATH } = require('@/config/api');
 
@@ -15,7 +16,7 @@ test.use({
 
 const date = Date.now().toString();
 
-const uniqueRef = ()=> (Math.floor(Math.random() * 3) + date.substring(3, date.length))
+const uniqueRef = ()=> (Math.floor(Math.random() * 3) + date.substring(3, date.length));
 
 const testUser = {
   username: `ser${uniqueRef()}`,
@@ -24,8 +25,8 @@ const testUser = {
 };
 
 let authToken = '';
-let testUserId = '';
-let testMessageId = '';
+const testUserId = '';
+const testMessageId = '';
 let registeredUser = null;
 
 test.describe.configure({ mode: 'serial' });
@@ -45,11 +46,11 @@ test.describe('API Endpoints', () => {
         data: testUser
       });
       const data = await response.json();
-      
+
       expect(response.status()).toBe(201);
       expect(data).toHaveProperty('token');
       expect(data.user.email).toBe(testUser.email);
-      
+
       registeredUser = data.user;
     });
 
@@ -60,10 +61,10 @@ test.describe('API Endpoints', () => {
           password: testUser.password
         }
       });
-      
+
       const data = await response.json();
-      console.log(response.status(),'response.status()')
-      
+      console.log(response.status(),'response.status()');
+
       expect(response.status()).toBe(200);
       expect(data).toHaveProperty('token');
       authToken = data.token;
@@ -78,7 +79,7 @@ test.describe('API Endpoints', () => {
       });
 
       const data = await response.json();
-      
+
       expect(response.status()).toBe(200);
       expect(Array.isArray(data.users)).toBeTruthy();
     });
@@ -108,16 +109,16 @@ test.describe('API Endpoints', () => {
 
       const { message, data } = await response.json();
 
-    //   console.log(data.content, data)
+      //   console.log(data.content, data)
 
-        expect(response.status()).toBe(201);
-        expect(data).toHaveProperty('content', testMessage);
+      expect(response.status()).toBe(201);
+      expect(data).toHaveProperty('content', testMessage);
 
-        expect(typeof data.sender).toBe('object');
-        expect(data.sender).toHaveProperty('username');
+      expect(typeof data.sender).toBe('object');
+      expect(data.sender).toHaveProperty('username');
 
-        expect(typeof data.receiver).toBe('object');
-        expect(data.receiver).toHaveProperty('username');
+      expect(typeof data.receiver).toBe('object');
+      expect(data.receiver).toHaveProperty('username');
     });
 
     test(`GET ${BASE_PATH}/messages/unread should list messages`, async ({ request }) => {
@@ -125,8 +126,8 @@ test.describe('API Endpoints', () => {
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
       const {  data } = await response.json();
-    //   console.log(data,'messages')
-      
+      //   console.log(data,'messages')
+
       expect(response.status()).toBe(200);
     });
   });

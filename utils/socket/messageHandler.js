@@ -1,7 +1,7 @@
 class MessageHandler {
-    handleMessage(socket, data) {
-        throw new Error('Method must be implemented');
-    }
+  handleMessage(_socket, _data) {
+    throw new Error('Method must be implemented');
+  }
 }
 
-module.exports = MessageHandler
+module.exports = MessageHandler;

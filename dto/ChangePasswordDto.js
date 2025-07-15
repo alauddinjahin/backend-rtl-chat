@@ -1,9 +1,9 @@
 class ChangePasswordDto {
-    constructor(data) {
-        this.currentPassword = data.currentPassword;
-        this.newPassword = data.newPassword;
-    }
+  constructor(data) {
+    this.currentPassword = data.currentPassword;
+    this.newPassword = data.newPassword;
+  }
 }
 
 
-module.exports = ChangePasswordDto
+module.exports = ChangePasswordDto;

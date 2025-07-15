@@ -1,7 +1,6 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const app = require('@/server');
-const User = require('@/models/User');
 const { BASE_PATH } = require('@/config/api');
 
 // Test data
@@ -19,15 +18,15 @@ describe('User API Integration Tests', () => {
   beforeAll(async () => {
     // Start server on random port
     server = app.listen(0);
-    
+
     // Clear database and create test user
     await mongoose.connection.dropDatabase();
-    
+
     // Register test user
     const registerResponse = await request(app)
       .post(`${BASE_PATH}/register`)
       .send(testUser);
-    
+
     // Verify registration response structure
     expect(registerResponse.status).toBe(201);
     expect(registerResponse.body).toHaveProperty('user');
@@ -41,13 +40,13 @@ describe('User API Integration Tests', () => {
         email: testUser.email,
         password: testUser.password
       });
-    
+
     // Verify login response structure
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body).toHaveProperty('token');
     expect(loginResponse.body).toHaveProperty('user');
     authToken = loginResponse.body.token;
-    
+
     console.log('Test Setup Complete - User ID:', testUserId);
   }, 30000);
 
@@ -64,11 +63,11 @@ describe('User API Integration Tests', () => {
         email: 'new@example.com',
         password: 'New@1234'
       };
-      
+
       const response = await request(app)
         .post(`${BASE_PATH}/register`)
         .send(newUser);
-      
+
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('user');
       expect(response.body.user).toHaveProperty('id');
@@ -82,7 +81,7 @@ describe('User API Integration Tests', () => {
           email: testUser.email,
           password: testUser.password
         });
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('token');
       expect(response.body).toHaveProperty('user');
@@ -95,18 +94,17 @@ describe('User API Integration Tests', () => {
       const response = await request(app)
         .get(`${BASE_PATH}/users`)
         .set('Authorization', `Bearer ${authToken}`);
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('users');
       expect(Array.isArray(response.body.users)).toBe(true);
-      
     }, 15000);
 
     test('GET /api/v1/users/:id should return user', async () => {
       const response = await request(app)
         .get(`${BASE_PATH}/users/${testUserId}`)
         .set('Authorization', `Bearer ${authToken}`);
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('user');
       expect(response.body.user).toHaveProperty('id', testUserId);

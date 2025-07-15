@@ -1,6 +1,6 @@
 const express = require('express');
-const User = require('../models/User');
-const Message = require('../models/Message');
+// const User = require('../models/User');
+// const Message = require('../models/Message');
 const auth = require('../middleware/auth');
 const UserController = require('../controllers/UserController');
 

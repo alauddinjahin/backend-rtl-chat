@@ -1,19 +1,19 @@
-const swaggerJSDoc = require("swagger-jsdoc");
-const { 
-  API_TITLE, 
-  API_FULL_VERSION, 
-  API_DESCRIPTION, 
-  API_TERMS_OF_SERVICE, 
-  API_CONTACT_NAME, 
-  API_CONTACT_URL, 
-  API_CONTACT_EMAIL, 
-  API_LICENSE_NAME, 
-  API_LICENSE_URL, 
-  API_HOST, 
-  API_TAGS, 
-  AUTH_TYPE, 
-  AUTH_SCHEME_NAME, 
-  AUTH_SCHEME} = require('./api');
+const swaggerJSDoc = require('swagger-jsdoc');
+const {
+  API_TITLE,
+  API_FULL_VERSION,
+  API_DESCRIPTION,
+  API_TERMS_OF_SERVICE,
+  API_CONTACT_NAME,
+  API_CONTACT_URL,
+  API_CONTACT_EMAIL,
+  API_LICENSE_NAME,
+  API_LICENSE_URL,
+  API_HOST,
+  API_TAGS,
+  AUTH_TYPE,
+  AUTH_SCHEME_NAME,
+  AUTH_SCHEME } = require('./api');
 
 const swaggerOptions = {
   definition: {
@@ -26,7 +26,7 @@ const swaggerOptions = {
       contact: {
         name: API_CONTACT_NAME,
         url: API_CONTACT_URL,
-        email: API_CONTACT_EMAIL,
+        email: API_CONTACT_EMAIL
       },
       license: {
         name: API_LICENSE_NAME,
@@ -50,10 +50,10 @@ const swaggerOptions = {
       }
     },
     security: [
-    {
-      [AUTH_SCHEME]: [],
-    },
-  ],
+      {
+        [AUTH_SCHEME]: []
+      }
+    ]
   },
   apis: [
     './utils/swagger/schemas/*.js',
@@ -67,4 +67,4 @@ const swaggerOptions = {
 
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
-module.exports = swaggerSpec
+module.exports = swaggerSpec;

@@ -1,18 +1,20 @@
+/* eslint-env node */
 
-const { expect } = require('@jest/globals');
+// const { expect } = require('@jest/globals');
 
 // Global test setup
 process.env.NODE_ENV = 'test';
 
 
 // Global test utilities
+/* eslint-env node, jest */
 global.testUtils = {
   createMockUser: (overrides = {}) => ({
     username: 'Test User',
     email: 'test@example.com',
     ...overrides
   }),
-  
+
   createMockUserWithId: (id = '1', overrides = {}) => ({
     id,
     username: 'Test User',

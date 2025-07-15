@@ -1,9 +1,8 @@
 const winston = require('winston');
-const {defaultMeta, is_printable_console, level, logs} = require("./../config/logger");
+const { defaultMeta, is_printable_console, level, logs } = require('./../config/logger');
 
 class Logger {
   constructor() {
-
     if (Logger.instance) {
       return Logger.instance;
     }
@@ -30,7 +29,6 @@ class Logger {
     Logger.instance = this;
   }
 
-  
 
   getLogger() {
     return this.logger;

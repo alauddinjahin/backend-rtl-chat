@@ -1,3 +1,4 @@
+/* eslint-env node */
 const User = require('../models/User');
 const Message = require('../models/Message');
 const socketAuth = require('../middleware/socketAuth');
@@ -30,12 +31,12 @@ const configureSocket = (io) => {
       receiver: socket.userId,
       delivered: false
     })
-    .populate('sender', 'username')
-    .sort({ createdAt: 1 });
+      .populate('sender', 'username')
+      .sort({ createdAt: 1 });
 
     if (undeliveredMessages.length > 0) {
       socket.emit('undeliveredMessages', undeliveredMessages);
-      
+
       // Mark messages as delivered
       await Message.updateMany(
         { receiver: socket.userId, delivered: false },
@@ -63,11 +64,11 @@ const configureSocket = (io) => {
 
         // Check if receiver is online
         const receiver = await User.findById(receiverId);
-        
+
         if (receiver && receiver.isOnline && receiver.socketId) {
           // Send to receiver
           io.to(receiver.socketId).emit('newMessage', message);
-          
+
           // Mark as delivered
           message.delivered = true;
           await message.save();
@@ -78,11 +79,10 @@ const configureSocket = (io) => {
           tempId: data.tempId,
           message
         });
-
       } catch (error) {
-        socket.emit('messageError', { 
-          tempId: data.tempId, 
-          error: error.message 
+        socket.emit('messageError', {
+          tempId: data.tempId,
+          error: error.message
         });
       }
     });
@@ -109,7 +109,7 @@ const configureSocket = (io) => {
       try {
         const { messageId } = data;
         await Message.findByIdAndUpdate(messageId, { read: true });
-        
+
         const message = await Message.findById(messageId);
         if (message) {
           const sender = await User.findById(message.sender);
@@ -125,7 +125,7 @@ const configureSocket = (io) => {
     // Handle disconnect
     socket.on('disconnect', async () => {
       console.log(`User ${socket.username} disconnected`);
-      
+
       // Update user offline status
       await User.findByIdAndUpdate(socket.userId, {
         isOnline: false,

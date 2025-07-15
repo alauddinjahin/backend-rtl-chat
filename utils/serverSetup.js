@@ -1,33 +1,31 @@
-const connectDB = require("../config/database");
-const serverConfig = require("./../config/server")
+const connectDB = require('../config/database');
+const serverConfig = require('./../config/server');
 
 const startServer = async (server, cb = ()=>{}) => {
   try {
-
     await connectDB();
 
     const listener = server.listen(serverConfig.PORT, _ => cb(serverConfig));
 
-       // Handle port in use error
-    listener.on("error", (e) => {
+    // Handle port in use error
+    listener.on('error', (e) => {
       if (e.code === 'EADDRINUSE') {
+        /* eslint-env node */
         setTimeout(() => {
           server.close();
           server.listen(serverConfig.PORT);
         }, 1000);
       }
     });
-    
-
-    
   } catch (error) {
+    /* eslint-env node */
     console.error('Failed to start server:', error);
     process.exit(1);
   }
 };
 
 
-module.exports = startServer
+module.exports = startServer;
 
 
 // curl -X POST http://localhost:5000/api/v1/register \

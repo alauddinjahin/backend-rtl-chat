@@ -1,8 +1,9 @@
 const { BASE_PATH } = require('@/config/api');
+
+/* eslint-disable no-redeclare */
 const { test, expect } = require('@playwright/test');
 
 test.describe('App E2E Tests', () => {
-
   test('should load homepage', async ({ request }) => {
     const response = await request.get('/');
     expect(response.status()).toBe(200);
@@ -11,14 +12,14 @@ test.describe('App E2E Tests', () => {
   test('should load Welcome page with docs link', async ({ request }) => {
     const response = await request.get(BASE_PATH);
     expect(response.status()).toBe(200);
-    
+
     // Get the HTML content
     const html = await response.text();
-    
+
     // Verify the welcome message exists
-    expect(html).toContain('<h1>'); 
-    expect(html).toContain('Welcome'); 
-    
+    expect(html).toContain('<h1>');
+    expect(html).toContain('Welcome');
+
     // Verify the docs link exists with correct href
     expect(html).toContain('<a ');
     // expect(html).toContain('href="/api/v1/docs"');
@@ -29,33 +30,30 @@ test.describe('App E2E Tests', () => {
   // More comprehensive version using Playwright's page model
   test('should render Welcome page correctly (UI verification)', async ({ page }) => {
     await page.goto(`${BASE_PATH}`);
-    
+
     // Verify h1 welcome message
     const heading = await page.locator('h1');
     await expect(heading).toBeVisible();
     await expect(heading).toHaveText(/Welcome/i);
-    
+
     // Verify docs link
     const docsLink = await page.locator('a[href="http://localhost:5000/api/v1/docs"]');
     await expect(docsLink).toBeVisible();
-    await expect(docsLink).toHaveText(/API Documentation/i);    
+    await expect(docsLink).toHaveText(/API Documentation/i);
     // wait for new page to load
 
-      // Now assert the URL of the new page
+    // Now assert the URL of the new page
 
-      // const [newPage] = await Promise.all([
-      //   page.context().waitForEvent('page'),
-      //   docsLink.click(),
-      // ]);
-      // await expect(newPage).toHaveURL(/\/api\/v1\/docs\/?$/);
-
+    // const [newPage] = await Promise.all([
+    //   page.context().waitForEvent('page'),
+    //   docsLink.click(),
+    // ]);
+    // await expect(newPage).toHaveURL(/\/api\/v1\/docs\/?$/);
   });
 });
 
 
-
-
-/* 
+/*
 const { test, expect } = require('@playwright/test');
 const { faker } = require('@faker-js/faker');
 
@@ -69,7 +67,7 @@ const testUser = {
 test.describe.configure({ mode: 'serial' });
 
 test.describe('Application UI Flows', () => {
-  
+
   let page;
   let authToken;
 
@@ -125,7 +123,7 @@ test.describe('Application UI Flows', () => {
 
   test('should send and display messages', async () => {
     const testMessage = faker.lorem.sentence();
-    
+
     // Navigate to messages
     await page.click('text=Messages');
     await expect(page).toHaveURL(/\/messages$/);
