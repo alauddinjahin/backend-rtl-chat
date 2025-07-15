@@ -1,4 +1,3 @@
-
 class HttpStatusCode {
   // Success
   static OK = 200;
@@ -48,4 +47,3 @@ class HttpStatusCode {
 
 const HTTPStatusCode = Object.freeze(HttpStatusCode);
 module.exports = HTTPStatusCode;
-

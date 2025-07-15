@@ -6,10 +6,11 @@ class PrivateMessageHandler extends MessageHandler {
     this.connectedUsers = connectedUsers;
   }
 
-
   handleMessage(socket, data) {
     if (!data.recipientId) {
-      socket.emit('error', { message: 'Recipient ID is required for private messages' });
+      socket.emit('error', {
+        message: 'Recipient ID is required for private messages'
+      });
       return;
     }
 

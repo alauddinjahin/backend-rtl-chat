@@ -1,4 +1,4 @@
-const healthCheck = (req, socketManager)=> {
+const healthCheck = (req, socketManager) => {
   return {
     status: 'OK',
     timestamp: new Date().toISOString(),
@@ -9,7 +9,7 @@ const healthCheck = (req, socketManager)=> {
     memory: process.memoryUsage(),
     dependencies: {
       database: 'connected', // will be added actual DB health check
-      redis: 'connected',    // will be added Redis health check if used
+      redis: 'connected', // will be added Redis health check if used
       activeUsers: socketManager.getConnectedUsersCount()
       // socketConnections: manager.getConnectedUsersCount()
     }

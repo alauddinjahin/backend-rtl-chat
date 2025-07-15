@@ -1,6 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { validateInput, validatePassword, emailValidator } = require('../utils/validator');
+const {
+  validateInput,
+  validatePassword,
+  emailValidator
+} = require('../utils/validator');
 const UserRepository = require('../repositories/UserRepository');
 const UserDto = require('../dto/UserDto');
 
@@ -73,7 +77,10 @@ class UserService {
     }
 
     // Verify password
-    const isPasswordValid = await this.verifyPassword(loginDto.password, user.password);
+    const isPasswordValid = await this.verifyPassword(
+      loginDto.password,
+      user.password
+    );
     if (!isPasswordValid) {
       throw new Error('Invalid credentials');
     }
@@ -104,7 +111,9 @@ class UserService {
     // Validate new password
     const passwordErrors = validatePassword(changePasswordDto.newPassword);
     if (passwordErrors.length > 0) {
-      throw new Error(`Password validation failed: ${passwordErrors.join(', ')}`);
+      throw new Error(
+        `Password validation failed: ${passwordErrors.join(', ')}`
+      );
     }
 
     // Get user
@@ -124,7 +133,9 @@ class UserService {
     }
 
     // Hash new password
-    const hashedNewPassword = await this.hashPassword(changePasswordDto.newPassword);
+    const hashedNewPassword = await this.hashPassword(
+      changePasswordDto.newPassword
+    );
 
     // Update password
     user.password = hashedNewPassword;
@@ -158,13 +169,8 @@ class UserService {
   }
 
   static generateToken(userId) {
-    return jwt.sign(
-      { userId },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
+    return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
   }
 }
 
 module.exports = UserService;
-

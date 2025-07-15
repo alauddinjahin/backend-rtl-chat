@@ -5,7 +5,6 @@
 // Global test setup
 process.env.NODE_ENV = 'test';
 
-
 // Global test utilities
 /* eslint-env node, jest */
 global.testUtils = {
@@ -23,16 +22,18 @@ global.testUtils = {
   })
 };
 
-
 expect.extend({
   toBeValidUser(received) {
-    const isValid = received && typeof received.username === 'string' && typeof received.email === 'string';
+    const isValid =
+      received &&
+      typeof received.username === 'string' &&
+      typeof received.email === 'string';
     return {
       pass: isValid,
-      message: () => isValid
-        ? 'Expected user not to be valid'
-        : 'Expected user to have valid name and email'
+      message: () =>
+        isValid
+          ? 'Expected user not to be valid'
+          : 'Expected user to have valid name and email'
     };
   }
 });
-

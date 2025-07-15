@@ -13,7 +13,12 @@ class MessageController {
         });
       }
 
-      const message = await MessageService.createMessage(senderId, receiverId, content, type);
+      const message = await MessageService.createMessage(
+        senderId,
+        receiverId,
+        content,
+        type
+      );
 
       res.status(HTTPStatusCode.CREATED).json({
         message: 'Message sent successfully',
@@ -27,7 +32,6 @@ class MessageController {
       });
     }
   }
-
 
   static async getUnreadMessages(req, res) {
     try {
@@ -47,7 +51,6 @@ class MessageController {
       });
     }
   }
-
 
   static async markAsRead(req, res) {
     try {
@@ -141,4 +144,3 @@ class MessageController {
 }
 
 module.exports = MessageController;
-

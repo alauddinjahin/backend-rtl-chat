@@ -9,9 +9,9 @@ const router = express.Router();
 // router.use(auth);
 // User routes
 router.get('/', auth, UserController.getAllUsers);
-router.get('/:id',auth, UserController.getUserById);
+router.get('/:id', auth, UserController.getUserById);
 
 // Get messages for a specific user
-router.get('/:id/messages',auth, UserController.getAllMessagesByUserId);
+router.get('/:id/messages', auth, UserController.getAllMessagesByUserId);
 
 module.exports = router;

@@ -13,7 +13,8 @@ const {
   API_TAGS,
   AUTH_TYPE,
   AUTH_SCHEME_NAME,
-  AUTH_SCHEME } = require('./api');
+  AUTH_SCHEME
+} = require('./api');
 
 const swaggerOptions = {
   definition: {
@@ -41,7 +42,8 @@ const swaggerOptions = {
     ],
     tags: API_TAGS,
     components: {
-      securitySchemes: { //securitySchemes
+      securitySchemes: {
+        //securitySchemes
         [AUTH_SCHEME]: {
           type: AUTH_TYPE,
           scheme: AUTH_SCHEME_NAME,
@@ -64,7 +66,6 @@ const swaggerOptions = {
     './dto/*.js'
   ]
 };
-
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 module.exports = swaggerSpec;

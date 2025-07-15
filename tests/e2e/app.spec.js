@@ -28,7 +28,9 @@ test.describe('App E2E Tests', () => {
   });
 
   // More comprehensive version using Playwright's page model
-  test('should render Welcome page correctly (UI verification)', async ({ page }) => {
+  test('should render Welcome page correctly (UI verification)', async ({
+    page
+  }) => {
     await page.goto(`${BASE_PATH}`);
 
     // Verify h1 welcome message
@@ -37,7 +39,9 @@ test.describe('App E2E Tests', () => {
     await expect(heading).toHaveText(/Welcome/i);
 
     // Verify docs link
-    const docsLink = await page.locator('a[href="http://localhost:5000/api/v1/docs"]');
+    const docsLink = await page.locator(
+      'a[href="http://localhost:5000/api/v1/docs"]'
+    );
     await expect(docsLink).toBeVisible();
     await expect(docsLink).toHaveText(/API Documentation/i);
     // wait for new page to load
@@ -51,7 +55,6 @@ test.describe('App E2E Tests', () => {
     // await expect(newPage).toHaveURL(/\/api\/v1\/docs\/?$/);
   });
 });
-
 
 /*
 const { test, expect } = require('@playwright/test');

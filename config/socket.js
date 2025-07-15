@@ -3,11 +3,11 @@ const User = require('../models/User');
 const Message = require('../models/Message');
 const socketAuth = require('../middleware/socketAuth');
 
-const configureSocket = (io) => {
+const configureSocket = io => {
   // Socket authentication middleware
   io.use(socketAuth);
 
-  io.on('connection', async (socket) => {
+  io.on('connection', async socket => {
     console.log(`User ${socket.username} connected`);
 
     // Update user online status
@@ -45,7 +45,7 @@ const configureSocket = (io) => {
     }
 
     // Handle sending messages
-    socket.on('sendMessage', async (data) => {
+    socket.on('sendMessage', async data => {
       try {
         const { receiverId, content, messageType = 'text' } = data;
 
@@ -88,7 +88,7 @@ const configureSocket = (io) => {
     });
 
     // Handle typing indicators
-    socket.on('typing', (data) => {
+    socket.on('typing', data => {
       socket.to(data.receiverId).emit('userTyping', {
         userId: socket.userId,
         username: socket.username,
@@ -96,7 +96,7 @@ const configureSocket = (io) => {
       });
     });
 
-    socket.on('stopTyping', (data) => {
+    socket.on('stopTyping', data => {
       socket.to(data.receiverId).emit('userTyping', {
         userId: socket.userId,
         username: socket.username,
@@ -105,7 +105,7 @@ const configureSocket = (io) => {
     });
 
     // Handle message read receipts
-    socket.on('markAsRead', async (data) => {
+    socket.on('markAsRead', async data => {
       try {
         const { messageId } = data;
         await Message.findByIdAndUpdate(messageId, { read: true });

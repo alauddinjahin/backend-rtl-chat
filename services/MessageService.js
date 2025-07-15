@@ -27,13 +27,17 @@ class MessageService {
     return await MessageRepository.create(messageData);
   }
 
-
   static async getMessagesBetweenUsers(userId1, userId2, page = 1, limit = 50) {
     if (!IdValidator(userId1) || !IdValidator(userId2)) {
       throw new Error('Invalid user ID format');
     }
 
-    const messages = await MessageRepository.getMessagesBetweenUsers(userId1, userId2, page, limit);
+    const messages = await MessageRepository.getMessagesBetweenUsers(
+      userId1,
+      userId2,
+      page,
+      limit
+    );
 
     // Mark messages as delivered
     await MessageRepository.markAsDelivered(userId2, userId1);
@@ -61,7 +65,10 @@ class MessageService {
     }
 
     // Check if user is authorized to delete (sender or receiver)
-    if (message.sender.toString() !== userId && message.receiver.toString() !== userId) {
+    if (
+      message.sender.toString() !== userId &&
+      message.receiver.toString() !== userId
+    ) {
       throw new Error('Unauthorized to delete this message');
     }
 

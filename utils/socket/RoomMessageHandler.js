@@ -3,7 +3,9 @@ const MessageHandler = require('./messageHandler');
 class RoomMessageHandler extends MessageHandler {
   handleMessage(socket, data) {
     if (!data.roomId) {
-      socket.emit('error', { message: 'Room ID is required for room messages' });
+      socket.emit('error', {
+        message: 'Room ID is required for room messages'
+      });
       return;
     }
 
@@ -17,6 +19,5 @@ class RoomMessageHandler extends MessageHandler {
     });
   }
 }
-
 
 module.exports = RoomMessageHandler;

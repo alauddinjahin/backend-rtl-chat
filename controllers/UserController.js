@@ -28,7 +28,6 @@ class UserController {
     }
   }
 
-
   static async getAllMessagesByUserId(req, res) {
     try {
       const { id } = req.params;
@@ -67,4 +66,3 @@ class UserController {
 }
 
 module.exports = UserController;
-

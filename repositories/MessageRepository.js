@@ -68,7 +68,11 @@ class MessageRepository {
   }
 
   static async markAsRead(messageId) {
-    return await Message.findByIdAndUpdate(messageId, { read: true }, { new: true });
+    return await Message.findByIdAndUpdate(
+      messageId,
+      { read: true },
+      { new: true }
+    );
   }
 
   static async deleteById(id) {

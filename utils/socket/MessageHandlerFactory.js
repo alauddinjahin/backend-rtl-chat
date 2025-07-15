@@ -9,13 +9,14 @@ class MessageHandlerFactory {
     this._initializeHandlers();
   }
 
-
   _initializeHandlers() {
     this.handlers.set('room', new RoomMessageHandler());
-    this.handlers.set('private', new PrivateMessageHandler(this.connectedUsers));
+    this.handlers.set(
+      'private',
+      new PrivateMessageHandler(this.connectedUsers)
+    );
     this.handlers.set('live', new LiveChatHandler());
   }
-
 
   getHandler(messageType) {
     const handler = this.handlers.get(messageType);

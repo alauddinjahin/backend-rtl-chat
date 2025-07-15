@@ -1,15 +1,12 @@
 module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/tests'],
-  testMatch: [
-    '**/tests/**/*.test.js',
-    '**/tests/**/*.spec.js'
-  ],
+  testMatch: ['**/tests/**/*.test.js', '**/tests/**/*.spec.js'],
   testPathIgnorePatterns: [
     '/node_modules/',
     '/playwright-report/',
     '/test-results/',
-    "/tests/e2e/"
+    '/tests/e2e/'
   ],
   collectCoverageFrom: [
     'backend/**/*.js',
@@ -56,5 +53,4 @@ module.exports = {
     '^@utils/(.*)$': '<rootDir>/utils/$1',
     '^@/server$': '<rootDir>/backend/server.js' // optional override
   }
-
 };

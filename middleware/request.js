@@ -6,7 +6,6 @@ const requestIdGenerator = (req, res, next) => {
   next();
 };
 
-
 // Request validation middleware
 const validateRequest = (req, res, next) => {
   const errors = validationResult(req);
@@ -19,7 +18,6 @@ const validateRequest = (req, res, next) => {
   }
   next();
 };
-
 
 module.exports = {
   requestIdGenerator,

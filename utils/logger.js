@@ -1,5 +1,10 @@
 const winston = require('winston');
-const { defaultMeta, is_printable_console, level, logs } = require('./../config/logger');
+const {
+  defaultMeta,
+  is_printable_console,
+  level,
+  logs
+} = require('./../config/logger');
 
 class Logger {
   constructor() {
@@ -18,17 +23,18 @@ class Logger {
       transports: [
         new winston.transports.File(logs.error),
         new winston.transports.File(logs.combined),
-        ...(is_printable_console ? [
-          new winston.transports.Console({
-            format: winston.format.simple()
-          })
-        ] : [])
+        ...(is_printable_console
+          ? [
+            new winston.transports.Console({
+              format: winston.format.simple()
+            })
+          ]
+          : [])
       ]
     });
 
     Logger.instance = this;
   }
-
 
   getLogger() {
     return this.logger;

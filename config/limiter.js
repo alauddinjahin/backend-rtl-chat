@@ -1,4 +1,3 @@
-
 const configLimiter = {
   _windowMs() {
     return 15 * 60 * 1000;
@@ -27,7 +26,6 @@ const configLimiter = {
   }
 };
 
-
 // const createLimiterConfig = () => {
 //     const windowMs = 15 * 60 * 1000; // 15 minutes
 
@@ -51,6 +49,5 @@ const configLimiter = {
 //         }
 //     };
 // };
-
 
 module.exports = configLimiter;

@@ -6,5 +6,3 @@ module.exports = {
   NODE_VERSION: process.version,
   PID: process.pid
 };
-
-

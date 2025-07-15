@@ -6,5 +6,4 @@ class RegisterDto {
   }
 }
 
-
 module.exports = RegisterDto;

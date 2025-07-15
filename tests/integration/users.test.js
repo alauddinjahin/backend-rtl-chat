@@ -34,12 +34,10 @@ describe('User API Integration Tests', () => {
     testUserId = registerResponse.body.user.id;
 
     // Login to get valid token
-    const loginResponse = await request(app)
-      .post(`${BASE_PATH}/login`)
-      .send({
-        email: testUser.email,
-        password: testUser.password
-      });
+    const loginResponse = await request(app).post(`${BASE_PATH}/login`).send({
+      email: testUser.email,
+      password: testUser.password
+    });
 
     // Verify login response structure
     expect(loginResponse.status).toBe(200);
@@ -75,12 +73,10 @@ describe('User API Integration Tests', () => {
     }, 15000);
 
     test('POST /api/v1/login should authenticate', async () => {
-      const response = await request(app)
-        .post(`${BASE_PATH}/login`)
-        .send({
-          email: testUser.email,
-          password: testUser.password
-        });
+      const response = await request(app).post(`${BASE_PATH}/login`).send({
+        email: testUser.email,
+        password: testUser.password
+      });
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('token');

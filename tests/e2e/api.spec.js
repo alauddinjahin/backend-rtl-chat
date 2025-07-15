@@ -7,7 +7,7 @@ const { BASE_PATH } = require('@/config/api');
 test.use({
   baseURL: process.env.API_BASE_URL || 'http://localhost:5000',
   extraHTTPHeaders: {
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'Content-Type': 'application/json'
   }
 });
@@ -16,7 +16,8 @@ test.use({
 
 const date = Date.now().toString();
 
-const uniqueRef = ()=> (Math.floor(Math.random() * 3) + date.substring(3, date.length));
+const uniqueRef = () =>
+  Math.floor(Math.random() * 3) + date.substring(3, date.length);
 
 const testUser = {
   username: `ser${uniqueRef()}`,
@@ -41,7 +42,9 @@ test.describe('API Endpoints', () => {
 
   // Auth Tests
   test.describe('Authentication', () => {
-    test(`POST ${BASE_PATH}/register should create user`, async ({ request }) => {
+    test(`POST ${BASE_PATH}/register should create user`, async ({
+      request
+    }) => {
       const response = await request.post(`${BASE_PATH}/register`, {
         data: testUser
       });
@@ -63,7 +66,7 @@ test.describe('API Endpoints', () => {
       });
 
       const data = await response.json();
-      console.log(response.status(),'response.status()');
+      console.log(response.status(), 'response.status()');
 
       expect(response.status()).toBe(200);
       expect(data).toHaveProperty('token');
@@ -75,7 +78,7 @@ test.describe('API Endpoints', () => {
   test.describe('User Management', () => {
     test(`GET ${BASE_PATH}/users should list users`, async ({ request }) => {
       const response = await request.get(`${BASE_PATH}/users`, {
-        headers: { 'Authorization': `Bearer ${authToken}` }
+        headers: { Authorization: `Bearer ${authToken}` }
       });
 
       const data = await response.json();
@@ -84,10 +87,15 @@ test.describe('API Endpoints', () => {
       expect(Array.isArray(data.users)).toBeTruthy();
     });
 
-    test(`GET ${BASE_PATH}/users/:id should return user`, async ({ request }) => {
-      const response = await request.get(`${BASE_PATH}/users/${registeredUser.id}`, {
-        headers: { 'Authorization': `Bearer ${authToken}` }
-      });
+    test(`GET ${BASE_PATH}/users/:id should return user`, async ({
+      request
+    }) => {
+      const response = await request.get(
+        `${BASE_PATH}/users/${registeredUser.id}`,
+        {
+          headers: { Authorization: `Bearer ${authToken}` }
+        }
+      );
       const data = await response.json();
       expect(response.status()).toBe(200);
       expect(data.user).toHaveProperty('id', registeredUser.id);
@@ -96,11 +104,13 @@ test.describe('API Endpoints', () => {
 
   // Message Tests
   test.describe('Message System', () => {
-    test(`POST ${BASE_PATH}/messages/send should create message`, async ({ request }) => {
+    test(`POST ${BASE_PATH}/messages/send should create message`, async ({
+      request
+    }) => {
       const testMessage = faker.lorem.sentence();
 
       const response = await request.post(`${BASE_PATH}/messages/send`, {
-        headers: { 'Authorization': `Bearer ${authToken}` },
+        headers: { Authorization: `Bearer ${authToken}` },
         data: {
           content: testMessage,
           receiverId: registeredUser.id
@@ -121,11 +131,13 @@ test.describe('API Endpoints', () => {
       expect(data.receiver).toHaveProperty('username');
     });
 
-    test(`GET ${BASE_PATH}/messages/unread should list messages`, async ({ request }) => {
+    test(`GET ${BASE_PATH}/messages/unread should list messages`, async ({
+      request
+    }) => {
       const response = await request.get(`${BASE_PATH}/messages/unread`, {
-        headers: { 'Authorization': `Bearer ${authToken}` }
+        headers: { Authorization: `Bearer ${authToken}` }
       });
-      const {  data } = await response.json();
+      const { data } = await response.json();
       //   console.log(data,'messages')
 
       expect(response.status()).toBe(200);
@@ -145,5 +157,3 @@ test.describe('API Endpoints', () => {
     });
   });
 });
-
-

@@ -6,7 +6,6 @@ const MessageHandlerFactory = require('../utils/socket/MessageHandlerFactory');
 const TypingIndicatorManager = require('../utils/socket/TypingIndicatorManager');
 const RoomManager = require('../utils/socket/RoomManager');
 
-
 class SocketManager {
   constructor() {
     this.io = null;
@@ -20,7 +19,6 @@ class SocketManager {
 
     this.cleanupInterval = null;
   }
-
 
   initialize(server) {
     const socketOptions = {
@@ -53,9 +51,8 @@ class SocketManager {
     this.io.use(socketAuth);
   }
 
-
   _setupEventHandlers() {
-    this.io.on('connection', (socket) => {
+    this.io.on('connection', socket => {
       console.log(`User connected: ${socket.id}`);
 
       // Register authenticated user
@@ -78,9 +75,7 @@ class SocketManager {
     });
   }
 
-
   _setupHealthCheck() {
-
     // Clean up stale connections every 5 minutes
     // this.cleanupInterval = setInterval(() => {
     //     this._cleanupStaleConnections();
@@ -94,15 +89,12 @@ class SocketManager {
     }
   }
 
-
   _cleanupStaleConnections() {
     // const now = new Date();
     // const staleThreshold = 10 * 60 * 1000; // 10 minutes
-
     // for (const [userId, session] of this.userSessions) {
     //     if (now - session.lastActivity > staleThreshold) {
     //         console.log(`Cleaning up stale session for user ${userId}`);
-
     //         // Force disconnect all user connections
     //         const connections = this.userConnections.get(userId);
     //         if (connections) {
@@ -117,20 +109,20 @@ class SocketManager {
     // }
   }
 
-
   _registerUser(socket) {
     if (socket.userId) {
       this.connectedUsers.set(socket.userId, socket.id);
       this.userSockets.set(socket.id, socket.userId);
       socket.join(`user_${socket.userId}`);
-      console.log(`User authenticated and registered: ${socket.userId} (${socket.username})`);
+      console.log(
+        `User authenticated and registered: ${socket.userId} (${socket.username})`
+      );
     }
   }
 
-
   _setupMessageHandlers(socket) {
     // Handle different types of messages
-    socket.on('send_message', (data) => {
+    socket.on('send_message', data => {
       try {
         if (!data) {
           socket.emit('error', { message: 'Message data is required' });
@@ -150,36 +142,33 @@ class SocketManager {
     });
   }
 
-
   _setupRoomHandlers(socket) {
-    socket.on('join_room', (roomId) => {
+    socket.on('join_room', roomId => {
       this.roomManager.handleJoinRoom(socket, roomId);
     });
 
-    socket.on('leave_room', (roomId) => {
+    socket.on('leave_room', roomId => {
       this.roomManager.handleLeaveRoom(socket, roomId);
     });
 
-    socket.on('get_room_users', (roomId) => {
+    socket.on('get_room_users', roomId => {
       const users = this.roomManager.getRoomUsers(roomId);
       socket.emit('room_users', { roomId, users });
     });
   }
 
-
   _setupTypingHandlers(socket) {
-    socket.on('typing_start', (data) => {
+    socket.on('typing_start', data => {
       this.typingManager.handleTypingStart(socket, data);
     });
 
-    socket.on('typing_stop', (data) => {
+    socket.on('typing_stop', data => {
       this.typingManager.handleTypingStop(socket, data);
     });
   }
 
-
   _setupDisconnectHandler(socket) {
-    socket.on('disconnect', (reason) => {
+    socket.on('disconnect', reason => {
       console.log(`User disconnected: ${socket.id}, Reason: ${reason}`);
 
       if (socket.userId) {
@@ -198,13 +187,11 @@ class SocketManager {
     });
   }
 
-
   _setupErrorHandler(socket) {
-    socket.on('error', (error) => {
+    socket.on('error', error => {
       console.error(`Socket error for ${socket.id}:`, error);
     });
   }
-
 
   _determineMessageType(data) {
     if (data.roomId) return 'room';
@@ -234,7 +221,6 @@ class SocketManager {
     return false;
   }
 
-
   sendToRoom(roomId, event, data) {
     if (!roomId) {
       console.error('Room ID is required to send message to room');
@@ -243,7 +229,6 @@ class SocketManager {
     this.io.to(roomId).emit(event, data);
     return true;
   }
-
 
   getConnectedUsersCount() {
     return this.connectedUsers.size;
@@ -260,7 +245,6 @@ class SocketManager {
   isUserConnected(userId) {
     return this.connectedUsers.has(userId);
   }
-
 
   getRoomUsers(roomId) {
     return this.roomManager.getRoomUsers(roomId);

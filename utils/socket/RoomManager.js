@@ -3,7 +3,6 @@ class RoomManager {
     this.rooms = new Map(); // roomId -> Set of userIds
   }
 
-
   handleJoinRoom(socket, roomId) {
     if (!roomId) {
       socket.emit('error', { message: 'Room ID is required' });
@@ -27,9 +26,10 @@ class RoomManager {
       roomId: roomId
     });
 
-    console.log(`User ${socket.userId} (${socket.username}) joined room: ${roomId}`);
+    console.log(
+      `User ${socket.userId} (${socket.username}) joined room: ${roomId}`
+    );
   }
-
 
   handleLeaveRoom(socket, roomId) {
     if (!roomId) {
@@ -57,9 +57,10 @@ class RoomManager {
       roomId: roomId
     });
 
-    console.log(`User ${socket.userId} (${socket.username}) left room: ${roomId}`);
+    console.log(
+      `User ${socket.userId} (${socket.username}) left room: ${roomId}`
+    );
   }
-
 
   handleUserDisconnect(userId, io) {
     // Remove user from all rooms
@@ -81,11 +82,9 @@ class RoomManager {
     }
   }
 
-
   getRoomUsers(roomId) {
     return this.rooms.has(roomId) ? Array.from(this.rooms.get(roomId)) : [];
   }
-
 
   getActiveRooms() {
     return Array.from(this.rooms.keys());

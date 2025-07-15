@@ -1,6 +1,6 @@
 const validator = require('validator');
 // Validation helper functions
-const validatePassword = (password) => {
+const validatePassword = password => {
   const errors = [];
 
   if (!password || password.length < 8) {
@@ -20,12 +20,13 @@ const validatePassword = (password) => {
   }
 
   if (!/(?=.*[@$!%*?&])/.test(password)) {
-    errors.push('Password must contain at least one special character (@$!%*?&)');
+    errors.push(
+      'Password must contain at least one special character (@$!%*?&)'
+    );
   }
 
   return errors;
 };
-
 
 const validateInput = (username, email, password) => {
   const errors = [];
@@ -56,8 +57,7 @@ const validateInput = (username, email, password) => {
   return errors;
 };
 
-
-const emailValidator = (email)=>{
+const emailValidator = email => {
   if (!email || !validator.isEmail(email)) {
     return 'Please provide a valid email address';
   }
@@ -65,8 +65,7 @@ const emailValidator = (email)=>{
   return null;
 };
 
-
-const IdValidator = (id)=>{
+const IdValidator = id => {
   let errorMsg = true;
   if (!id?.match(/^[0-9a-fA-F]{24}$/)) {
     errorMsg = false;
@@ -74,7 +73,6 @@ const IdValidator = (id)=>{
 
   return errorMsg;
 };
-
 
 module.exports = {
   validatePassword,

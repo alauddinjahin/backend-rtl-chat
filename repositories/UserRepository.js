@@ -1,4 +1,3 @@
-
 const User = require('../models/User');
 
 class UserRepository {
@@ -39,10 +38,14 @@ class UserRepository {
   }
 
   static async updateOnlineStatus(userId, isOnline) {
-    return await User.findByIdAndUpdate(userId, {
-      isOnline,
-      lastSeen: new Date()
-    }, { new: true });
+    return await User.findByIdAndUpdate(
+      userId,
+      {
+        isOnline,
+        lastSeen: new Date()
+      },
+      { new: true }
+    );
   }
 }
 

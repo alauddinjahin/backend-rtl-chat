@@ -54,7 +54,10 @@ class AuthController {
   static async changePassword(req, res) {
     try {
       const changePasswordDto = new ChangePasswordDto(req.body);
-      const result = await UserService.changePassword(req.user.id, changePasswordDto);
+      const result = await UserService.changePassword(
+        req.user.id,
+        changePasswordDto
+      );
 
       res.json(result);
     } catch (error) {
@@ -95,7 +98,6 @@ class AuthController {
   //         });
   //     }
   // }
-
 
   static async getUserById(req, res) {
     try {

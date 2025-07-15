@@ -1,5 +1,4 @@
-
-const Metrics = (req, socketManager)=>{
+const Metrics = (req, socketManager) => {
   return {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),

@@ -2,7 +2,7 @@ const socketIo = require('socket.io');
 const allowedOrigins = require('./allowedOrigins');
 
 // Configure Socket.IO with CORS
-const socketConnection = (server)=>{
+const socketConnection = server => {
   const socketOptions = {
     cors: {
       origin: allowedOrigins,
@@ -19,5 +19,3 @@ const socketConnection = (server)=>{
 };
 
 module.exports = socketConnection;
-
-

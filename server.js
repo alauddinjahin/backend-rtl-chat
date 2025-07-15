@@ -15,7 +15,12 @@ const messageRoutes = require('./routes/messages');
 const swaggerRoutes = require('./routes/swagger');
 // const socketConnection = require('./utils/socketServer');
 const SocketManager = require('./config/SocketManager');
-const { initializeErrorHandlers, notFoundHandler, errorHandler, AppError } = require('./middleware/errorMiddleware');
+const {
+  initializeErrorHandlers,
+  notFoundHandler,
+  errorHandler,
+  AppError
+} = require('./middleware/errorMiddleware');
 const logger = require('./utils/logger');
 const helmetConfig = require('./config/helmet');
 const corsConfig = require('./config/cors');
@@ -28,8 +33,10 @@ const HTTPStatusCode = require('./utils/statusCode');
 const startServer = require('./utils/serverSetup');
 const { BASE_PATH, API_DOCS_ROUTE } = require('./config/api');
 const runRedis = require('./tests/redis');
-const { authLimiterRedis, generalLimiterRedis } = require('./middleware/rateLimiterRedis');
-
+const {
+  authLimiterRedis,
+  generalLimiterRedis
+} = require('./middleware/rateLimiterRedis');
 
 // Create Express app
 const app = express();
@@ -42,12 +49,10 @@ const manager = SocketManager.initialize(server);
 // Security middleware
 app.use(helmet(helmetConfig));
 
-
 // Rate limiting
 // console.log(authLimiterConfig, 'authLimiterConfig')
 // const limiter = rateLimit(generalLimiter);
 // const authLimiter = rateLimit(authLimiterConfig);
-
 
 // Middleware stack
 app.use(compression());
@@ -57,29 +62,28 @@ app.set('trust proxy', 1);
 
 app.use(generalLimiterRedis);
 
-
 // Enhanced CORS configuration
 app.use(cors(corsConfig));
 
-
 // Request logging
-app.use(morgan('combined', {
-  stream: { write: message => logger.info(message.trim()) }
-}));
-
+app.use(
+  morgan('combined', {
+    stream: { write: message => logger.info(message.trim()) }
+  })
+);
 
 // Body parsing with size limits
-app.use(express.json({
-  limit: '10mb',
-  verify: (req, res, buf) => {
-    req.rawBody = buf;
-  }
-}));
-
+app.use(
+  express.json({
+    limit: '10mb',
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    }
+  })
+);
 
 // Request ID middleware for tracing
 app.use(requestIdGenerator);
-
 
 // app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -102,9 +106,7 @@ app.use(`${BASE_PATH}`, authLimiterRedis, authRoutes);
 app.use(`${BASE_PATH}/users`, userRoutes);
 app.use(`${BASE_PATH}/messages`, messageRoutes);
 
-
 app.use(`${BASE_PATH}${API_DOCS_ROUTE}`, swaggerRoutes);
-
 
 // Enhanced health check endpoint
 app.get(`${BASE_PATH}/health`, async (req, res) => {
@@ -127,18 +129,18 @@ app.get(`${BASE_PATH}/metrics`, (req, res) => {
     // In production, protect this endpoint
     const authHeader = req.headers.authorization;
     if (!authHeader || authHeader !== `Bearer ${process.env.METRICS_TOKEN}`) {
-      return res.status(HTTPStatusCode.UNAUTHORIZED).json({ error: 'Unauthorized' });
+      return res
+        .status(HTTPStatusCode.UNAUTHORIZED)
+        .json({ error: 'Unauthorized' });
     }
   }
 
   res.json(Metrics(req, manager));
 });
 
-
 // Configure Socket.IO
 // configureSocket(io);
 manager.load();
-
 
 app.get('/crash', (_req, _res) => {
   throw new AppError('Unexpected server error');
@@ -160,17 +162,14 @@ app.use(errorHandler);
 //   }
 // });
 
-
 // 404 handler
 app.use('*', notFoundHandler);
-
 
 // Graceful shutdown
 initializeErrorHandlers(server, manager);
 
-
 // Start the server
-startServer(server, ({ PORT, NODE_ENV, NODE_VERSION, PID })=>{
+startServer(server, ({ PORT, NODE_ENV, NODE_VERSION, PID }) => {
   logger.info('Server started successfully', {
     port: PORT,
     environment: NODE_ENV,
@@ -184,6 +183,5 @@ startServer(server, ({ PORT, NODE_ENV, NODE_VERSION, PID })=>{
   console.log(`Health check: http://localhost:${PORT}${BASE_PATH}/health`);
   runRedis();
 });
-
 
 module.exports = app;

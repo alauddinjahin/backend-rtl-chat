@@ -2,7 +2,11 @@ const HTTPStatusCode = require('./../utils/statusCode'); // Adjust path as neede
 const logger = require('./../utils/logger');
 
 class AppError extends Error {
-  constructor(message, statusCode = HTTPStatusCode.INTERNAL_SERVER_ERROR, isOperational = true) {
+  constructor(
+    message,
+    statusCode = HTTPStatusCode.INTERNAL_SERVER_ERROR,
+    isOperational = true
+  ) {
     super(message);
 
     this.name = this.constructor.name;
@@ -13,7 +17,6 @@ class AppError extends Error {
     Error.captureStackTrace(this, this.constructor);
   }
 }
-
 
 // Enhanced global error handling middleware
 const errorHandler = (err, req, res, _next) => {
@@ -52,9 +55,8 @@ const errorHandler = (err, req, res, _next) => {
     }
   };
 
-
   // Handle specific error types
-  const handleSpecificErrors = (err) => {
+  const handleSpecificErrors = err => {
     // Mongoose CastError (Invalid ObjectId)
     if (err.name === 'CastError') {
       const message = `Invalid ${err.path}: ${err.value}`;
@@ -78,24 +80,39 @@ const errorHandler = (err, req, res, _next) => {
 
     // JWT Errors
     if (err.name === 'JsonWebTokenError') {
-      return new AppError('Invalid token. Please log in again.', HTTPStatusCode.UNAUTHORIZED);
+      return new AppError(
+        'Invalid token. Please log in again.',
+        HTTPStatusCode.UNAUTHORIZED
+      );
     }
 
     if (err.name === 'TokenExpiredError') {
-      return new AppError('Your token has expired. Please log in again.', HTTPStatusCode.UNAUTHORIZED);
+      return new AppError(
+        'Your token has expired. Please log in again.',
+        HTTPStatusCode.UNAUTHORIZED
+      );
     }
 
     // Multer Errors (File Upload)
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return new AppError('File too large. Please upload a smaller file.', HTTPStatusCode.PAYLOAD_TOO_LARGE);
+      return new AppError(
+        'File too large. Please upload a smaller file.',
+        HTTPStatusCode.PAYLOAD_TOO_LARGE
+      );
     }
 
     if (err.code === 'LIMIT_FILE_COUNT') {
-      return new AppError('Too many files. Please upload fewer files.', HTTPStatusCode.BAD_REQUEST);
+      return new AppError(
+        'Too many files. Please upload fewer files.',
+        HTTPStatusCode.BAD_REQUEST
+      );
     }
 
     if (err.code === 'LIMIT_UNEXPECTED_FILE') {
-      return new AppError('Unexpected file field. Please check your file upload.', HTTPStatusCode.BAD_REQUEST);
+      return new AppError(
+        'Unexpected file field. Please check your file upload.',
+        HTTPStatusCode.BAD_REQUEST
+      );
     }
 
     // Syntax Error (Invalid JSON)
@@ -105,12 +122,21 @@ const errorHandler = (err, req, res, _next) => {
 
     // Rate Limiting Error
     if (err.statusCode === HTTPStatusCode.TOO_MANY_REQUESTS) {
-      return new AppError('Too many requests. Please try again later.', HTTPStatusCode.TOO_MANY_REQUESTS);
+      return new AppError(
+        'Too many requests. Please try again later.',
+        HTTPStatusCode.TOO_MANY_REQUESTS
+      );
     }
 
     // Database Connection Error
-    if (err.name === 'MongoNetworkError' || err.name === 'MongooseServerSelectionError') {
-      return new AppError('Database connection failed. Please try again later.', HTTPStatusCode.SERVICE_UNAVAILABLE);
+    if (
+      err.name === 'MongoNetworkError' ||
+      err.name === 'MongooseServerSelectionError'
+    ) {
+      return new AppError(
+        'Database connection failed. Please try again later.',
+        HTTPStatusCode.SERVICE_UNAVAILABLE
+      );
     }
 
     return err;
@@ -122,8 +148,7 @@ const errorHandler = (err, req, res, _next) => {
   // Log the error
   logError(error, req);
 
-
-  const getCleanMessage = (error) => {
+  const getCleanMessage = error => {
     // For operational errors (our custom AppError), use the message
     if (error.isOperational) {
       return error.message;
@@ -137,7 +162,6 @@ const errorHandler = (err, req, res, _next) => {
     // For client errors, use the message (usually safe)
     return error.message;
   };
-
 
   // Prepare clean response
   const errorResponse = {
@@ -169,7 +193,6 @@ const errorHandler = (err, req, res, _next) => {
   return res.status(error.statusCode).json(errorResponse);
 };
 
-
 const notFoundHandler = (req, res) => {
   // Log the 404 warning
   logger.warn(`404 - Route not found: ${req.method} ${req.originalUrl}`, {
@@ -187,14 +210,12 @@ const notFoundHandler = (req, res) => {
   });
 };
 
-
-const asyncHandler = (fn) => (req, res, next) => {
+const asyncHandler = fn => (req, res, next) => {
   return Promise.resolve(fn(req, res, next)).catch(next);
 };
 
-
 const handleUncaughtException = () => {
-  process.on('uncaughtException', (err) => {
+  process.on('uncaughtException', err => {
     console.error('UNCAUGHT EXCEPTION! Shutting down...');
     console.error('Error:', err.name, err.message);
     console.error('Stack:', err.stack);
@@ -202,9 +223,8 @@ const handleUncaughtException = () => {
   });
 };
 
-
-const handleUnhandledRejection = (server) => {
-  process.on('unhandledRejection', (err) => {
+const handleUnhandledRejection = server => {
+  process.on('unhandledRejection', err => {
     console.error('UNHANDLED REJECTION! Shutting down...');
     console.error('Error:', err.name, err.message);
     console.error('Stack:', err.stack);
@@ -215,9 +235,8 @@ const handleUnhandledRejection = (server) => {
   });
 };
 
-
-const handleGracefulShutdown = (server) => {
-  const shutdown = (signal) => {
+const handleGracefulShutdown = server => {
+  const shutdown = signal => {
     console.log(`\n${signal} received. Shutting down gracefully...`);
 
     server.close(() => {
@@ -230,8 +249,7 @@ const handleGracefulShutdown = (server) => {
   process.on('SIGINT', () => shutdown('SIGINT'));
 };
 
-
-const initializeErrorHandlers = (server) => {
+const initializeErrorHandlers = server => {
   handleUncaughtException();
   handleUnhandledRejection(server);
   handleGracefulShutdown(server);
@@ -244,5 +262,3 @@ module.exports = {
   asyncHandler,
   initializeErrorHandlers
 };
-
-

@@ -5,9 +5,7 @@ const { BASE_PATH } = require('@/config/api');
 describe('App Integration Tests', () => {
   describe('GET /', () => {
     it('should return welcome message', async () => {
-      const response = await request(app)
-        .get(BASE_PATH)
-        .expect(200);
+      const response = await request(app).get(BASE_PATH).expect(200);
 
       expect(response.body).toBeDefined();
       // Add your specific assertions here
@@ -27,7 +25,6 @@ describe('App Integration Tests', () => {
 
   // Add more integration tests for your specific routes
 });
-
 
 // "lint": "eslint src tests",
 // "lint:fix": "eslint src tests --fix",

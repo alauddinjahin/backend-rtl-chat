@@ -1,4 +1,3 @@
-
 const applicationLogger = (err, req) => {
   const timestamp = new Date().toISOString();
   return {

@@ -1,14 +1,14 @@
 const connectDB = require('../config/database');
 const serverConfig = require('./../config/server');
 
-const startServer = async (server, cb = ()=>{}) => {
+const startServer = async (server, cb = () => {}) => {
   try {
     await connectDB();
 
     const listener = server.listen(serverConfig.PORT, _ => cb(serverConfig));
 
     // Handle port in use error
-    listener.on('error', (e) => {
+    listener.on('error', e => {
       if (e.code === 'EADDRINUSE') {
         /* eslint-env node */
         setTimeout(() => {
@@ -24,9 +24,7 @@ const startServer = async (server, cb = ()=>{}) => {
   }
 };
 
-
 module.exports = startServer;
-
 
 // curl -X POST http://localhost:5000/api/v1/register \
 //   -H "Content-Type: application/json" \

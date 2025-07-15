@@ -1,11 +1,11 @@
-
 module.exports = {
   API_VERSION: process.env.API_VERSION || 'v1',
   BASE_PATH: `/api/${process.env.API_VERSION || 'v1'}`,
 
   // General Info
   API_TITLE: 'Chat API',
-  API_DESCRIPTION: 'Robust RESTful API for real-time messaging, user management, and media exchange.',
+  API_DESCRIPTION:
+    'Robust RESTful API for real-time messaging, user management, and media exchange.',
   API_TERMS_OF_SERVICE: 'https://yourdomain.com/terms',
   API_CONTACT_NAME: 'Developer Support',
   API_CONTACT_URL: 'https://yourdomain.com/support',

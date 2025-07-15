@@ -5,5 +5,4 @@ class ChangePasswordDto {
   }
 }
 
-
 module.exports = ChangePasswordDto;

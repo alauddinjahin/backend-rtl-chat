@@ -3,10 +3,11 @@ class TypingIndicatorManager {
     this.typingUsers = new Map(); // roomId -> Set of typing users
   }
 
-
   handleTypingStart(socket, data) {
     if (!data?.roomId) {
-      socket.emit('error', { message: 'Room ID is required for typing indicator' });
+      socket.emit('error', {
+        message: 'Room ID is required for typing indicator'
+      });
       return;
     }
 
@@ -26,10 +27,11 @@ class TypingIndicatorManager {
     });
   }
 
-
   handleTypingStop(socket, data) {
     if (!data?.roomId) {
-      socket.emit('error', { message: 'Room ID is required for typing indicator' });
+      socket.emit('error', {
+        message: 'Room ID is required for typing indicator'
+      });
       return;
     }
 
@@ -51,7 +53,6 @@ class TypingIndicatorManager {
       roomId: data.roomId
     });
   }
-
 
   handleUserDisconnect(userId, io) {
     // Remove user from all typing rooms

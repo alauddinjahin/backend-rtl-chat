@@ -7,3 +7,4 @@ playwright-report
 .github
 .husky
 .vscode
+utils/swagger/*
