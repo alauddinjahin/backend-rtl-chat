@@ -28,3 +28,5 @@ node_modules/
 # .husky/
 # ├── pre-commit         # Runs lint and tests
 # ├── commit-msg         # Ensures commit messages follow rules
+
+# git commit -m "skip husky hook" --no-verify

@@ -1,6 +1,6 @@
 // eslint.config.js
 const js = require('@eslint/js');
-const prettier = require('eslint-config-prettier');
+const prettier = require('eslint-config-prettier'); // avoid eslint and prettier conflict
 
 module.exports = [
   js.configs.recommended,
