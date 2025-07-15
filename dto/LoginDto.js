@@ -5,5 +5,4 @@ class LoginDto {
   }
 }
 
-
 module.exports = LoginDto;

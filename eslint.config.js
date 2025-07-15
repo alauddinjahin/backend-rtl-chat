@@ -1,5 +1,6 @@
 // eslint.config.js
 const js = require('@eslint/js');
+const prettier = require('eslint-config-prettier');
 
 module.exports = [
   js.configs.recommended,
@@ -36,7 +37,7 @@ module.exports = [
       'no-var': 'error',
       'prefer-const': 'error',
       indent: ['error', 2],
-    //   quotes: ['error', 'single'],
+      //   quotes: ['error', 'single'],
       quotes: ['error', 'single', { avoidEscape: true }],
       semi: ['error', 'always'],
       'comma-dangle': ['error', 'never'],
@@ -100,5 +101,6 @@ module.exports = [
       '*.config.*',
       'utils/swagger'
     ]
-  }
+  },
+  prettier
 ];

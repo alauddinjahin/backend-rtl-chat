@@ -25,10 +25,10 @@ class Logger {
         new winston.transports.File(logs.combined),
         ...(is_printable_console
           ? [
-            new winston.transports.Console({
-              format: winston.format.simple()
-            })
-          ]
+              new winston.transports.Console({
+                format: winston.format.simple()
+              })
+            ]
           : [])
       ]
     });

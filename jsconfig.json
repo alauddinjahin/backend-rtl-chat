@@ -13,3 +13,10 @@
 }
 
 // disabled nodemodules to check typescript
+
+// inside package.json
+
+// "format": "prettier --write '**/*.{js,ts,jsx,tsx}'",
+// "format:check": "prettier --check '**/*.{js,ts,jsx,tsx}'"
+// to avoid conflict for config
+// eslint-config-prettier install this package
