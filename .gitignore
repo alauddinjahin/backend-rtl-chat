@@ -19,3 +19,12 @@ node_modules/
 # Optional: IDE files
 .vscode/
 .idea/
+
+
+# !/usr/bin/env sh
+# . "$(dirname "$0")/husky.sh"
+# npm run lint && npm run test 
+
+# .husky/
+# ├── pre-commit         # Runs lint and tests
+# ├── commit-msg         # Ensures commit messages follow rules

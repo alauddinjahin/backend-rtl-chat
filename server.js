@@ -177,11 +177,11 @@ startServer(server, ({ PORT, NODE_ENV, NODE_VERSION, PID }) => {
     pid: PID
   });
 
-console.log(`Server running on port ${PORT}`);
-console.log(`Environment: ${NODE_ENV || 'development'}`);
-console.log(`API URL: http://localhost:${PORT}${BASE_PATH}`);
-console.log(`Health check: http://localhost:${PORT}${BASE_PATH}/health`);
-runRedis();
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${NODE_ENV || 'development'}`);
+  console.log(`API URL: http://localhost:${PORT}${BASE_PATH}`);
+  console.log(`Health check: http://localhost:${PORT}${BASE_PATH}/health`);
+  runRedis();
 
 });
 
