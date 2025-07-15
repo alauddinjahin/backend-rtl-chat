@@ -26,28 +26,5 @@ const configLimiter = {
   }
 };
 
-// const createLimiterConfig = () => {
-//     const windowMs = 15 * 60 * 1000; // 15 minutes
-
-//     const getMessage = () => ({
-//         error: 'Too many authentication attempts, please try again later.',
-//         retryAfter: '15 minutes'
-//     });
-
-//     return {
-//         generalLimiter: {
-//             max: 1000, // limit each IP
-//             standardHeaders: true,
-//             legacyHeaders: false,
-//             windowMs,
-//             ...getMessage()
-//         },
-//         authLimiter: {
-//             max: 5,
-//             windowMs,
-//             ...getMessage()
-//         }
-//     };
-// };
 
 module.exports = configLimiter;

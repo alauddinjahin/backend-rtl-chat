@@ -30,3 +30,30 @@ node_modules/
 # ├── commit-msg         # Ensures commit messages follow rules
 
 # git commit -m "skip husky hook" --no-verify
+
+
+#!/usr/bin/env sh
+# . "$(dirname "$0")/husky.sh"
+
+# commit_msg_file="$1"
+# commit_msg=$(cat "$commit_msg_file")
+
+# # Enforce conventional commits like: commit-msg file
+# # feat(scope): something
+# # fix: another thing
+
+# # Allowed types
+# types="feat|fix|docs|style|refactor|perf|test|chore|ci|build|issue"
+
+# # Validate against conventional commit pattern
+# if ! echo "$commit_msg" | grep -qE "^($types)(\([a-z\-]+\))?: .+"; then
+#   RED='\033[0;31m'
+#   NC='\033[0m' # No Color
+
+#   echo ""
+#   echo -e "${RED}❌ Invalid commit message format!${NC}"
+#   # echo "\nInvalid commit message format!"
+#   echo "Expected format: <type>(optional-scope): <description>"
+#   echo "Example: feat(message): add message delivery endpoint"
+#   exit 1
+# fi
