@@ -1,0 +1,29 @@
+name: Security & Compliance Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  security-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Check for bypass attempts
+        run: |
+          # Check for --no-verify usage in commit messages
+          if git log --grep="--no-verify" --oneline HEAD~10..HEAD | grep -q .; then
+            echo "❌ Found --no-verify usage in commit history"
+            exit 1
+          fi
+          
+          # Check for large files
+          if git diff --name-only HEAD~1 HEAD | xargs -I {} sh -c 'test -f "{}" && test $(stat -c%s "{}") -gt 1048576' 2>/dev/null; then
+            echo "❌ Found files larger than 1MB"
+            exit 1
+          fi
+          
+          echo "Security checks passed"

@@ -1,0 +1,3 @@
+*        @alauddinjahin        # You are the code owner for all files
+.github/ @alauddinjahin        # You are also the code owner for GitHub workflows
+.husky/  @alauddinjahin        # And for Git hooks and validation
