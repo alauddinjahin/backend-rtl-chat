@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+# Set explicit permissions to avoid 403 errors
+# permissions:
+#   contents: read
+#   statuses: write
+#   pull-requests: write
+#   checks: write
+
 jobs:
   validate-commits:
     runs-on: ubuntu-latest
@@ -178,12 +185,28 @@ jobs:
             const description = state === 'success' 
               ? 'All commit messages follow conventional format'
               : 'Some commit messages have invalid format';
+              
+            try {
+              await github.rest.repos.createCommitStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: context.sha,
+                state: state,
+                description: description,
+                context: 'commit-message-validation'
+              });
+            } catch (error) {
+              core.error(`Failed to create commit status: ${error}`);
+              // Don't fail the job if status update fails
+            }
             
-            github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: context.sha,
-              state: state,
-              description: description,
-              context: 'commit-message-validation'
-            });
+
+
+# github.rest.repos.createCommitStatus({
+#   owner: context.repo.owner,
+#   repo: context.repo.repo,
+#   sha: context.sha,
+#   state: state,
+#   description: description,
+#   context: 'commit-message-validation'
+# });
