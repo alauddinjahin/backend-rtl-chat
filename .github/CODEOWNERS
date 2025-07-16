@@ -1,6 +1,0 @@
-# .github/CODEOWNERS
-
-*               @alauddinjahin      # You are the code owner for all files
-.github/*       @alauddinjahin      # Covers workflows/CODEOWNERS
-.github/workflows/* @alauddinjahin  # Extra protection for workflows
-.husky/*        @alauddinjahin      # And for Git hooks and validation

@@ -1,228 +1,228 @@
-name: Validate Commit Messages
+# name: Validate Commit Messages
 
-on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
+# on:
+#   push:
+#     branches: [ main, develop ]
+#   pull_request:
+#     branches: [ main, develop ]
 
-# Set explicit permissions to avoid 403 errors
-# This is ALL you need for permissions
-permissions:
-  contents: read
-  statuses: write
-  checks: write
-  pull-requests: write
+# # Set explicit permissions to avoid 403 errors
+# # This is ALL you need for permissions
+# permissions:
+#   contents: read
+#   statuses: write
+#   checks: write
+#   pull-requests: write
 
-jobs:
-  validate-commits:
-    runs-on: ubuntu-latest
+# jobs:
+#   validate-commits:
+#     runs-on: ubuntu-latest
     
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
+#           token: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Validate Commit Messages
-        id: validate
-        run: |
-          #!/bin/bash
-          set -e
+#       - name: Validate Commit Messages
+#         id: validate
+#         run: |
+#           #!/bin/bash
+#           set -e
           
-          # Colors for output
-          RED='\033[0;31m'
-          GREEN='\033[0;32m'
-          YELLOW='\033[1;33m'
-          NC='\033[0m'
+#           # Colors for output
+#           RED='\033[0;31m'
+#           GREEN='\033[0;32m'
+#           YELLOW='\033[1;33m'
+#           NC='\033[0m'
 
 
-          # --- ANTI-BYPASS CHECKS ---
-          # Check if pusher is NOT the owner
-          if [ "${{ github.actor }}" != "alauddinjahin" ]; then
-            echo "::group:: Anti-bypass validation"
+#           # --- ANTI-BYPASS CHECKS ---
+#           # Check if pusher is NOT the owner
+#           if [ "${{ github.actor }}" != "alauddinjahin" ]; then
+#             echo "::group:: Anti-bypass validation"
             
-            # 1. Check for --no-verify flag usage
-            if git log --grep="--no-verify" --oneline HEAD~10..HEAD | grep -q .; then
-              echo -e "${RED}❌ Bypass attempt detected: --no-verify flag used${NC}"
-              exit 1
-            fi
+#             # 1. Check for --no-verify flag usage
+#             if git log --grep="--no-verify" --oneline HEAD~10..HEAD | grep -q .; then
+#               echo -e "${RED}❌ Bypass attempt detected: --no-verify flag used${NC}"
+#               exit 1
+#             fi
 
-            # 2. Detect force pushes (including --force-with-lease)
-            if [ "${{ github.event_name }}" == "push" ] && [ "${{ github.event.forced }}" == "true" ]; then
-              echo "::error::Illegal force push detected (--force or --force-with-lease)"
-              exit 1
-            fi
+#             # 2. Detect force pushes (including --force-with-lease)
+#             if [ "${{ github.event_name }}" == "push" ] && [ "${{ github.event.forced }}" == "true" ]; then
+#               echo "::error::Illegal force push detected (--force or --force-with-lease)"
+#               exit 1
+#             fi
             
-            # 2. Verify commit signature (if you use signed commits)
-            # if ! git verify-commit HEAD 2>/dev/null; then
-            #   echo -e "${RED}❌ Unsigned commit detected${NC}"
-            #   exit 1
-            # fi
+#             # 2. Verify commit signature (if you use signed commits)
+#             # if ! git verify-commit HEAD 2>/dev/null; then
+#             #   echo -e "${RED}❌ Unsigned commit detected${NC}"
+#             #   exit 1
+#             # fi
             
-            echo "::endgroup::"
-          fi
+#             echo "::endgroup::"
+#           fi
           
-          # Validation configuration
-          ALLOWED_TYPES="feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert"
-          MIN_LENGTH=10
-          MAX_LENGTH=72
-          PATTERN="^(${ALLOWED_TYPES})(\([a-z0-9\-]+\))?: .{${MIN_LENGTH},${MAX_LENGTH}}$"
+#           # Validation configuration
+#           ALLOWED_TYPES="feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert"
+#           MIN_LENGTH=10
+#           MAX_LENGTH=72
+#           PATTERN="^(${ALLOWED_TYPES})(\([a-z0-9\-]+\))?: .{${MIN_LENGTH},${MAX_LENGTH}}$"
           
-          echo "Validating commit messages..."
+#           echo "Validating commit messages..."
           
-          # Determine commit range based on event type
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            # For PRs, check commits in the PR
-            BASE_SHA="${{ github.event.pull_request.base.sha }}"
-            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
-            COMMIT_RANGE="${BASE_SHA}..${HEAD_SHA}"
-          else
-            # For push events, check commits in the push
-            if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
-              # New branch - check last 10 commits
-              COMMIT_RANGE="HEAD~10..HEAD"
-            else
-              COMMIT_RANGE="${{ github.event.before }}..${{ github.event.after }}"
-            fi
-          fi
+#           # Determine commit range based on event type
+#           if [ "${{ github.event_name }}" = "pull_request" ]; then
+#             # For PRs, check commits in the PR
+#             BASE_SHA="${{ github.event.pull_request.base.sha }}"
+#             HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+#             COMMIT_RANGE="${BASE_SHA}..${HEAD_SHA}"
+#           else
+#             # For push events, check commits in the push
+#             if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
+#               # New branch - check last 10 commits
+#               COMMIT_RANGE="HEAD~10..HEAD"
+#             else
+#               COMMIT_RANGE="${{ github.event.before }}..${{ github.event.after }}"
+#             fi
+#           fi
           
-          echo "Checking commit range: $COMMIT_RANGE"
+#           echo "Checking commit range: $COMMIT_RANGE"
           
-          # Get list of commits to validate
-          COMMITS=$(git rev-list --reverse "$COMMIT_RANGE" 2>/dev/null || echo "")
+#           # Get list of commits to validate
+#           COMMITS=$(git rev-list --reverse "$COMMIT_RANGE" 2>/dev/null || echo "")
           
-          if [ -z "$COMMITS" ]; then
-            echo -e "${YELLOW}⚠️  No commits to validate${NC}"
-            exit 0
-          fi
+#           if [ -z "$COMMITS" ]; then
+#             echo -e "${YELLOW}⚠️  No commits to validate${NC}"
+#             exit 0
+#           fi
           
-          INVALID_COUNT=0
-          TOTAL_COUNT=0
+#           INVALID_COUNT=0
+#           TOTAL_COUNT=0
           
-          # Validate each commit
-          for commit in $COMMITS; do
-            TOTAL_COUNT=$((TOTAL_COUNT + 1))
-            msg=$(git log --format=%s -n 1 "$commit")
-            author=$(git log --format=%an -n 1 "$commit")
-            short_sha=$(git rev-parse --short "$commit")
+#           # Validate each commit
+#           for commit in $COMMITS; do
+#             TOTAL_COUNT=$((TOTAL_COUNT + 1))
+#             msg=$(git log --format=%s -n 1 "$commit")
+#             author=$(git log --format=%an -n 1 "$commit")
+#             short_sha=$(git rev-parse --short "$commit")
             
-            echo ""
-            echo "Commit $short_sha by $author:"
-            echo "   Message: \"$msg\""
+#             echo ""
+#             echo "Commit $short_sha by $author:"
+#             echo "   Message: \"$msg\""
             
-            # Skip merge commits
-            if echo "$msg" | grep -q "^Merge"; then
-              echo -e "   ${GREEN} Skipped (merge commit)${NC}"
-              continue
-            fi
+#             # Skip merge commits
+#             if echo "$msg" | grep -q "^Merge"; then
+#               echo -e "   ${GREEN} Skipped (merge commit)${NC}"
+#               continue
+#             fi
             
-            # Skip revert commits  
-            if echo "$msg" | grep -q "^Revert"; then
-              echo -e "   ${GREEN} Skipped (revert commit)${NC}"
-              continue
-            fi
+#             # Skip revert commits  
+#             if echo "$msg" | grep -q "^Revert"; then
+#               echo -e "   ${GREEN} Skipped (revert commit)${NC}"
+#               continue
+#             fi
             
-            # Validate commit message format
-            if echo "$msg" | grep -qE "$PATTERN"; then
-              echo -e "   ${GREEN} Valid${NC}"
-            else
-              echo -e "   ${RED}❌ Invalid format${NC}"
-              INVALID_COUNT=$((INVALID_COUNT + 1))
+#             # Validate commit message format
+#             if echo "$msg" | grep -qE "$PATTERN"; then
+#               echo -e "   ${GREEN} Valid${NC}"
+#             else
+#               echo -e "   ${RED}❌ Invalid format${NC}"
+#               INVALID_COUNT=$((INVALID_COUNT + 1))
               
-              # Provide specific feedback
-              if [ ${#msg} -lt $MIN_LENGTH ]; then
-                echo -e "   ${RED}   → Message too short (${#msg} chars, min: $MIN_LENGTH)${NC}"
-              elif [ ${#msg} -gt $MAX_LENGTH ]; then
-                echo -e "   ${RED}   → Message too long (${#msg} chars, max: $MAX_LENGTH)${NC}"
-              else
-                echo -e "   ${RED}   → Invalid format${NC}"
-              fi
-            fi
-          done
+#               # Provide specific feedback
+#               if [ ${#msg} -lt $MIN_LENGTH ]; then
+#                 echo -e "   ${RED}   → Message too short (${#msg} chars, min: $MIN_LENGTH)${NC}"
+#               elif [ ${#msg} -gt $MAX_LENGTH ]; then
+#                 echo -e "   ${RED}   → Message too long (${#msg} chars, max: $MAX_LENGTH)${NC}"
+#               else
+#                 echo -e "   ${RED}   → Invalid format${NC}"
+#               fi
+#             fi
+#           done
           
-          echo ""
-          echo "   Validation Summary:"
-          echo "   Total commits: $TOTAL_COUNT"
-          echo "   Invalid commits: $INVALID_COUNT"
+#           echo ""
+#           echo "   Validation Summary:"
+#           echo "   Total commits: $TOTAL_COUNT"
+#           echo "   Invalid commits: $INVALID_COUNT"
           
-          if [ $INVALID_COUNT -gt 0 ]; then
-            echo ""
-            echo -e "${RED}❌ Validation failed!${NC}"
-            echo ""
-            echo "Expected format: <type>(optional-scope): <description>"
-            echo "Allowed types: feat, fix, docs, style, refactor, perf, test, chore, ci, build, revert"
-            echo ""
-            echo "Examples:"
-            echo "  feat: add user authentication"
-            echo "  fix(api): resolve null pointer exception"
-            echo "  docs(readme): update installation instructions"
-            echo ""
-            echo "Requirements:"
-            echo "  • Description must be $MIN_LENGTH-$MAX_LENGTH characters"
-            echo "  • Use lowercase for type and scope"
-            echo "  • Start description with lowercase letter"
-            echo "  • No period at the end"
-            echo ""
-            exit 1
-          else
-            echo -e "${GREEN}✅ All commit messages are valid!${NC}"
-          fi
+#           if [ $INVALID_COUNT -gt 0 ]; then
+#             echo ""
+#             echo -e "${RED}❌ Validation failed!${NC}"
+#             echo ""
+#             echo "Expected format: <type>(optional-scope): <description>"
+#             echo "Allowed types: feat, fix, docs, style, refactor, perf, test, chore, ci, build, revert"
+#             echo ""
+#             echo "Examples:"
+#             echo "  feat: add user authentication"
+#             echo "  fix(api): resolve null pointer exception"
+#             echo "  docs(readme): update installation instructions"
+#             echo ""
+#             echo "Requirements:"
+#             echo "  • Description must be $MIN_LENGTH-$MAX_LENGTH characters"
+#             echo "  • Use lowercase for type and scope"
+#             echo "  • Start description with lowercase letter"
+#             echo "  • No period at the end"
+#             echo ""
+#             exit 1
+#           else
+#             echo -e "${GREEN}✅ All commit messages are valid!${NC}"
+#           fi
 
-      - name: Comment on PR (if validation fails)
-        if: failure() && github.event_name == 'pull_request'
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const comment = `## ❌ Commit Message Validation Failed
+#       - name: Comment on PR (if validation fails)
+#         if: failure() && github.event_name == 'pull_request'
+#         uses: actions/github-script@v6
+#         with:
+#           script: |
+#             const comment = `## ❌ Commit Message Validation Failed
             
-            Your commit messages don't follow the conventional commit format.
+#             Your commit messages don't follow the conventional commit format.
             
-            **Expected format:** \`<type>(optional-scope): <description>\`
+#             **Expected format:** \`<type>(optional-scope): <description>\`
             
-            **Allowed types:** feat, fix, docs, style, refactor, perf, test, chore, ci, build, revert
+#             **Allowed types:** feat, fix, docs, style, refactor, perf, test, chore, ci, build, revert
             
-            **Examples:**
-            - \`feat: add user authentication\`
-            - \`fix(api): resolve null pointer exception\`
-            - \`docs(readme): update installation instructions\`
+#             **Examples:**
+#             - \`feat: add user authentication\`
+#             - \`fix(api): resolve null pointer exception\`
+#             - \`docs(readme): update installation instructions\`
             
-            **Requirements:**
-            - Description must be 10-72 characters
-            - Use lowercase for type and scope
-            - Start description with lowercase letter
-            - No period at the end
+#             **Requirements:**
+#             - Description must be 10-72 characters
+#             - Use lowercase for type and scope
+#             - Start description with lowercase letter
+#             - No period at the end
             
-            Please fix your commit messages and push again.
+#             Please fix your commit messages and push again.
             
-            **Tip:** Use \`git commit --amend\` to fix the last commit message, or \`git rebase -i\` for older commits.`;
+#             **Tip:** Use \`git commit --amend\` to fix the last commit message, or \`git rebase -i\` for older commits.`;
             
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
+#             github.rest.issues.createComment({
+#               issue_number: context.issue.number,
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               body: comment
+#             });
 
-      - name: Set commit status
-        if: always()
-        uses: actions/github-script@v6
-        with:
-          script: |
-            try {
-              await github.rest.repos.createCommitStatus({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                sha: context.sha,
-                state: '${{ job.status }}' === 'success' ? 'success' : 'failure',
-                description: '${{ job.status }}' === 'success' 
-                  ? 'All commit messages valid' 
-                  : 'Commit message validation failed',
-                context: 'commit-message-validation'
-              });
-            } catch (error) {
-              core.warning(`Failed to update commit status: ${error.message}`);
-            }
+#       - name: Set commit status
+#         if: always()
+#         uses: actions/github-script@v6
+#         with:
+#           script: |
+#             try {
+#               await github.rest.repos.createCommitStatus({
+#                 owner: context.repo.owner,
+#                 repo: context.repo.repo,
+#                 sha: context.sha,
+#                 state: '${{ job.status }}' === 'success' ? 'success' : 'failure',
+#                 description: '${{ job.status }}' === 'success' 
+#                   ? 'All commit messages valid' 
+#                   : 'Commit message validation failed',
+#                 context: 'commit-message-validation'
+#               });
+#             } catch (error) {
+#               core.warning(`Failed to update commit status: ${error.message}`);
+#             }
             
 
