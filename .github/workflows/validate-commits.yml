@@ -26,6 +26,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Validate Commit Messages
+        id: validate
         run: |
           #!/bin/bash
           set -e
@@ -35,6 +36,33 @@ jobs:
           GREEN='\033[0;32m'
           YELLOW='\033[1;33m'
           NC='\033[0m'
+
+
+          # --- ANTI-BYPASS CHECKS ---
+          # Check if pusher is NOT the owner
+          if [ "${{ github.actor }}" != "alauddinjahin" ]; then
+            echo "::group:: Anti-bypass validation"
+            
+            # 1. Check for --no-verify flag usage
+            if git log --grep="--no-verify" --oneline HEAD~10..HEAD | grep -q .; then
+              echo -e "${RED}❌ Bypass attempt detected: --no-verify flag used${NC}"
+              exit 1
+            fi
+
+            # 2. Detect force pushes (including --force-with-lease)
+            if [ "${{ github.event_name }}" == "push" ] && [ "${{ github.event.forced }}" == "true" ]; then
+              echo "::error::Illegal force push detected (--force or --force-with-lease)"
+              exit 1
+            fi
+            
+            # 2. Verify commit signature (if you use signed commits)
+            # if ! git verify-commit HEAD 2>/dev/null; then
+            #   echo -e "${RED}❌ Unsigned commit detected${NC}"
+            #   exit 1
+            # fi
+            
+            echo "::endgroup::"
+          fi
           
           # Validation configuration
           ALLOWED_TYPES="feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert"
@@ -198,12 +226,3 @@ jobs:
             }
             
 
-
-# github.rest.repos.createCommitStatus({
-#   owner: context.repo.owner,
-#   repo: context.repo.repo,
-#   sha: context.sha,
-#   state: state,
-#   description: description,
-#   context: 'commit-message-validation'
-# });
